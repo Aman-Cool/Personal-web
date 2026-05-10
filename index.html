@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aman Kumar — Full-Stack Engineer</title>
+  <meta name="description" content="Full-Stack Engineer. Systems Architecture · Real-Time Data · Security-First Design. Bangalore, India.">
+  <meta property="og:title" content="Aman Kumar — Full-Stack Engineer">
+  <meta property="og:description" content="Full-Stack Engineer. Systems Architecture · Real-Time Data · Security-First Design.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23030303'/%3E%3Cpolygon points='16,5 28,27 4,27' fill='none' stroke='%23fbbf24' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black:    #030303;
+      --black-2:  #0a0a0a;
+      --navy:     #0a1628;
+      --navy-2:   #0f172a;
+      --amber:    #fbbf24;
+      --amber-2:  #f59e0b;
+      --amber-3:  #d97706;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--black);
+      color: #e2e8f0;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    body.is-touch { cursor: auto; }
+
+    /* Film grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+      opacity: 0.03;
+      mix-blend-mode: overlay;
+    }
+
+    /* ---- CURSOR ---- */
+    #cur-dot, #cur-ring, .cur-ghost {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      will-change: left, top;
+    }
+    #cur-dot {
+      width: 8px; height: 8px;
+      background: var(--amber);
+      transition: width .2s, height .2s;
+      z-index: 10000;
+    }
+    #cur-ring {
+      width: 28px; height: 28px;
+      border: 1px solid rgba(251,191,36,.5);
+      transition: width .3s var(--ease), height .3s var(--ease), opacity .3s;
+    }
+    .cur-ghost {
+      background: var(--amber);
+      opacity: 0;
+    }
+    body.cur-hover #cur-dot  { width: 20px; height: 20px; }
+    body.cur-hover #cur-ring { width: 42px; height: 42px; opacity: .45; }
+
+    /* ---- LOAD OVERLAY ---- */
+    #load-veil {
+      position: fixed; inset: 0;
+      background: var(--black);
+      z-index: 8000;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity .9s ease;
+    }
+    #load-veil.gone { opacity: 0; pointer-events: none; }
+
+    #load-pulse {
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251,191,36,.07) 0%, transparent 70%);
+      transform: scale(0);
+      transition: transform 1.1s var(--ease);
+    }
+    #load-pulse.on { transform: scale(1); }
+
+    /* ---- SHARED SECTION ---- */
+    section { position: relative; overflow: hidden; }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .sec-head {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      color: #f8fafc;
+      margin-bottom: 3rem;
+    }
+    .sec-head em { color: var(--amber); font-style: normal; }
+
+    /* ---- REVEAL SYSTEM ---- */
+    .rv {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ---- HERO ---- */
+    #hero {
+      height: 100vh;
+      min-height: 600px;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    #hero-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+
+    #fog {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 2;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 50%, rgba(10,22,40,.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(15,23,42,.25) 0%, transparent 60%);
+      animation: fogDrift 30s ease-in-out infinite alternate;
+    }
+    @keyframes fogDrift {
+      0%   { opacity: .6; transform: scale(1); }
+      100% { opacity: .85; transform: scale(1.05); }
+    }
+
+    #searchlight {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 8;
+      background: radial-gradient(circle 300px at 50% 50%, rgba(3,3,3,0) 0%, rgba(3,3,3,.88) 100%);
+      will-change: background;
+    }
+
+    .hero-cnt {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 1.5rem;
+    }
+
+    #hero-name {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: #f8fafc;
+      line-height: 1;
+      opacity: 0;
+      min-height: 1em;
+    }
+    #hero-name.vis { opacity: 1; }
+    #hero-name .ch { display: inline-block; }
+
+    #hero-sub {
+      font-family: var(--mono);
+      font-size: clamp(.8rem, 2vw, 1rem);
+      color: var(--amber);
+      opacity: 0;
+      min-height: 1.4em;
+      transition: opacity .4s;
+    }
+    #hero-sub.vis { opacity: 1; }
+
+    .blink {
+      display: inline-block;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    #hero-cta {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 2rem;
+      border: 1px solid rgba(251,191,36,.3);
+      border-radius: 9999px;
+      color: var(--amber);
+      font-family: var(--mono);
+      font-size: .85rem;
+      text-decoration: none;
+      background: transparent;
+      cursor: pointer;
+      opacity: 0;
+      transition: background .3s, color .3s, box-shadow .3s, opacity .5s, border-color .3s;
+    }
+    #hero-cta.vis { opacity: 1; }
+    #hero-cta:hover {
+      background: var(--amber);
+      color: #000;
+      box-shadow: 0 0 40px rgba(251,191,36,.3), 0 0 80px rgba(251,191,36,.1);
+    }
+
+    /* ---- ABOUT ---- */
+    #about { padding: 8rem 0; background: var(--black-2); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .id-card {
+      background: rgba(255,255,255,.02);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(251,191,36,.15);
+      border-radius: 1rem;
+      padding: 2rem;
+      transform: perspective(800px) rotateY(-8deg);
+      opacity: 0;
+      transition: transform .9s var(--ease), opacity .9s var(--ease), box-shadow .3s;
+    }
+    .id-card.in { transform: perspective(800px) rotateY(0deg); opacity: 1; }
+    .id-card:hover { box-shadow: 0 8px 40px rgba(251,191,36,.08); }
+
+    .id-row { margin-bottom: 1.4rem; }
+    .id-row:last-child { margin-bottom: 0; }
+    .id-lbl {
+      font-family: var(--mono);
+      font-size: .6rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--amber);
+      opacity: .65;
+      margin-bottom: .2rem;
+    }
+    .id-val { font-size: .95rem; color: #e2e8f0; }
+    .id-val a { color: var(--amber); text-decoration: none; }
+    .id-val a:hover { opacity: .75; }
+
+    .narrative p {
+      font-size: 1.02rem;
+      line-height: 1.85;
+      color: #94a3b8;
+      margin-bottom: 1.2rem;
+    }
+    .narrative p:last-child { margin-bottom: 0; }
+
+    .arsenal { margin-top: 4rem; }
+    .arsenal-lbl {
+      font-family: var(--mono);
+      font-size: .62rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--amber);
+      opacity: .55;
+      margin-bottom: 1rem;
+    }
+    .skills { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+    .pill {
+      display: flex; align-items: center; gap: .45rem;
+      padding: .45rem .95rem;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(251,191,36,.2);
+      border-radius: .45rem;
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: #e2e8f0;
+      opacity: 0;
+      cursor: default;
+      transition: opacity .5s, border-color .3s, transform .3s, box-shadow .3s;
+    }
+    .pill.in { opacity: 1; }
+    .pill:hover {
+      border-color: rgba(251,191,36,.6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(251,191,36,.1);
+    }
+    .pill-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--amber);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .pill:hover .pill-dot { opacity: 1; }
+
+    /* ---- PROJECTS ---- */
+    #projects { padding: 8rem 0; background: var(--black); }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .proj-card {
+      background: var(--black-2);
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: .85rem;
+      padding: 1.75rem;
+      position: relative;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease),
+                  border-color .3s, background .3s, box-shadow .3s;
+      clip-path: polygon(0 14px, 14px 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .proj-card.in { opacity: 1; transform: translateY(0); }
+    .proj-card:hover {
+      border-color: rgba(251,191,36,.4);
+      background: #0f0f0f;
+      transform: translateY(-6px) !important;
+      box-shadow: 0 20px 60px rgba(251,191,36,.08), 0 8px 30px rgba(0,0,0,.5);
+    }
+
+    .card-line {
+      position: absolute;
+      top: 0; left: 0;
+      height: 2px; width: 0;
+      background: var(--amber);
+      border-radius: 1px;
+      transition: width .9s var(--ease);
+    }
+    .proj-card.in .card-line { width: 100%; }
+
+    .mini-cv {
+      width: 100%; height: 72px;
+      border-radius: .45rem;
+      margin-bottom: 1.25rem;
+      background: rgba(0,0,0,.35);
+      display: block;
+    }
+
+    .proj-title { font-size: 1.15rem; font-weight: 700; color: #f8fafc; margin-bottom: .2rem; }
+    .proj-sub {
+      font-family: var(--mono);
+      font-size: .68rem; color: var(--amber); opacity: .7;
+      text-transform: uppercase; letter-spacing: .1em;
+      margin-bottom: .9rem;
+    }
+    .proj-desc { font-size: .855rem; line-height: 1.7; color: #64748b; margin-bottom: 1.1rem; }
+
+    .stack-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.1rem; }
+    .stag {
+      font-family: var(--mono);
+      font-size: .68rem; color: #475569;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.07);
+      padding: .18rem .5rem; border-radius: .25rem;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.35rem; }
+    .chip {
+      font-family: var(--mono);
+      font-size: .63rem; color: var(--amber);
+      background: rgba(251,191,36,.05);
+      border: 1px solid rgba(251,191,36,.2);
+      padding: .22rem .55rem; border-radius: .25rem;
+    }
+
+    .proj-links { display: flex; gap: 1.4rem; }
+    .proj-link {
+      font-family: var(--mono);
+      font-size: .78rem; color: var(--amber);
+      text-decoration: none; position: relative;
+    }
+    .proj-link::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--amber);
+      transition: width .3s;
+    }
+    .proj-link:hover::after { width: 100%; }
+
+    /* ---- METRICS ---- */
+    #metrics { padding: 6rem 0; background: var(--navy); }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .met-card {
+      background: rgba(255,255,255,.02);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 .75rem .75rem 0;
+      padding: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s var(--ease), transform .6s var(--ease);
+    }
+    .met-card.in { opacity: 1; transform: none; }
+
+    .met-val {
+      font-family: var(--mono);
+      font-size: 2.75rem; font-weight: 800;
+      color: var(--amber); line-height: 1;
+      margin-bottom: .4rem;
+    }
+    .met-lbl {
+      font-family: var(--mono);
+      font-size: .75rem; color: #64748b;
+      text-transform: uppercase; letter-spacing: .1em;
+    }
+
+    .inf-pulse { animation: infPulse 3s ease-in-out infinite; }
+    @keyframes infPulse {
+      0%,100% { opacity:1; text-shadow: 0 0 20px rgba(251,191,36,.3); }
+      50%      { opacity:.65; text-shadow: 0 0 40px rgba(251,191,36,.6); }
+    }
+
+    /* Heatmap */
+    .hmap-wrap {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .8s var(--ease), transform .8s var(--ease);
+    }
+    .hmap-wrap.in { opacity: 1; transform: none; }
+    .hmap-lbl {
+      font-family: var(--mono);
+      font-size: .6rem; text-transform: uppercase;
+      letter-spacing: .2em; color: #334155;
+      margin-bottom: .7rem;
+    }
+    #hmap { display: flex; gap: 3px; overflow-x: auto; padding-bottom: .5rem; }
+    .hmap-col { display: flex; flex-direction: column; gap: 3px; }
+    .hmap-cell {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      transition: transform .15s, box-shadow .15s;
+      cursor: default;
+    }
+    .hmap-cell:hover { transform: scale(1.5); }
+
+    /* ---- CONTACT ---- */
+    #contact { padding: 8rem 0; background: var(--black-2); position: relative; }
+    #rain-cv { position: absolute; inset: 0; pointer-events: none; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      position: relative; z-index: 1;
+    }
+
+    .fgrp { position: relative; margin-bottom: 2.5rem; }
+    .finput {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(251,191,36,.2);
+      padding: .7rem 0;
+      font-family: var(--sans); font-size: 1rem;
+      color: #e2e8f0;
+      outline: none;
+      transition: border-color .3s, border-width .1s;
+    }
+    .finput:focus { border-bottom: 2px solid rgba(251,191,36,.8); }
+    textarea.finput { resize: none; height: 110px; }
+    .flbl {
+      position: absolute; top: .7rem; left: 0;
+      font-family: var(--mono); font-size: .8rem;
+      color: #64748b; pointer-events: none;
+      transition: top .3s, font-size .3s, color .3s, letter-spacing .3s, text-transform .3s;
+    }
+    .finput:focus ~ .flbl,
+    .finput:not(:placeholder-shown) ~ .flbl {
+      top: -1rem; font-size: .62rem;
+      color: var(--amber); letter-spacing: .1em; text-transform: uppercase;
+    }
+
+    .send-btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .85rem 2rem;
+      background: transparent;
+      border: 1px solid rgba(251,191,36,.4);
+      border-radius: .5rem;
+      color: var(--amber);
+      font-family: var(--mono); font-size: .85rem;
+      cursor: pointer;
+      transition: background .3s, box-shadow .3s;
+    }
+    .send-btn:hover {
+      background: rgba(251,191,36,.06);
+      box-shadow: 0 0 30px rgba(251,191,36,.15);
+    }
+    .send-btn:hover .arr { transform: translateX(4px); }
+    .arr { transition: transform .3s; }
+
+    .cinfo h3 { font-size: 1.4rem; font-weight: 800; color: #f8fafc; margin-bottom: .9rem; }
+    .cinfo p  { color: #64748b; line-height: 1.85; margin-bottom: 2rem; font-size: .95rem; }
+
+    .social-row { display: flex; gap: 1.2rem; }
+    .soc {
+      display: flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px;
+      position: relative;
+      color: #475569;
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .soc:hover { color: var(--amber); }
+    .soc svg { width: 22px; height: 22px; position: relative; z-index: 1; }
+    .soc-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--amber);
+      opacity: 0; transform: scale(.5);
+      transition: opacity .4s, transform .4s;
+    }
+    .soc:hover .soc-ring { opacity: .4; transform: scale(1.35); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 2.5rem 2rem;
+      background: var(--black);
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,.04);
+    }
+    .ft-txt {
+      font-family: var(--mono);
+      font-size: .72rem; color: #334155;
+      margin-bottom: 1.25rem;
+    }
+    .ft-mark { display: inline-block; opacity: .08; color: var(--amber); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cur-dot, #cur-ring, .cur-ghost { display: none; }
+      .about-grid, .proj-grid, .contact-grid { grid-template-columns: 1fr; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .id-card { transform: none; opacity: 1; }
+      .id-card.in { transform: none; }
+    }
+
+    @media (max-width: 480px) {
+      .metrics-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ---- REDUCED MOTION ---- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      html { scroll-behavior: auto; }
+      #hero-name, #hero-sub, #hero-cta { opacity: 1 !important; }
+      .id-card, .proj-card, .met-card, .pill, .rv, .hmap-wrap { opacity: 1 !important; transform: none !important; }
+      #cur-dot, #cur-ring, .cur-ghost { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div id="cur-dot" aria-hidden="true"></div>
+  <div id="cur-ring" aria-hidden="true"></div>
+  <div class="cur-ghost" id="cg1" aria-hidden="true"></div>
+  <div class="cur-ghost" id="cg2" aria-hidden="true"></div>
+  <div class="cur-ghost" id="cg3" aria-hidden="true"></div>
+
+  <!-- Load overlay -->
+  <div id="load-veil" aria-hidden="true">
+    <div id="load-pulse"></div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero" aria-label="Command Center">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div id="fog" aria-hidden="true"></div>
+    <div id="searchlight" aria-hidden="true"></div>
+    <div class="hero-cnt">
+      <h1 id="hero-name" aria-label="Aman Kumar"></h1>
+      <p id="hero-sub" aria-label="Full-Stack Engineer — Go · React · Node.js · TypeScript"></p>
+      <a href="#about" id="hero-cta" aria-label="Navigate to about section">Initiate Sequence ↓</a>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" aria-label="Identity">
+    <div class="wrap">
+      <h2 class="sec-head rv">The <em>Engineer</em></h2>
+      <div class="about-grid">
+        <div class="id-card" id="id-card" aria-label="Identity card">
+          <div class="id-row">
+            <div class="id-lbl">Name</div>
+            <div class="id-val">Aman Kumar</div>
+          </div>
+          <div class="id-row">
+            <div class="id-lbl">Location</div>
+            <div class="id-val">Bangalore, India</div>
+          </div>
+          <div class="id-row">
+            <div class="id-lbl">Role</div>
+            <div class="id-val">Full-Stack Engineer</div>
+          </div>
+          <div class="id-row">
+            <div class="id-lbl">Focus</div>
+            <div class="id-val">Systems Architecture · Real-Time Data · Security-First Design</div>
+          </div>
+          <div class="id-row">
+            <div class="id-lbl">GitHub</div>
+            <div class="id-val">
+              <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer">github.com/Aman-Cool</a>
+            </div>
+          </div>
+        </div>
+        <div class="narrative rv">
+          <p>I build systems that hold under pressure. My work lives at the intersection of performance engineering and security architecture — where every design decision is deliberate and every abstraction earns its place.</p>
+          <p>From Go microservices handling concurrent event streams to React interfaces that surface complex data cleanly, I operate across the full stack with the same standard: robust, observable, and built to scale without surprise.</p>
+          <p>Security is not a feature I add after the fact. It's a constraint I design around from the first line — production-grade authentication, cryptographic integrity, and failure-tolerant pipelines are the baseline, not the finish line.</p>
+        </div>
+      </div>
+      <div class="arsenal">
+        <div class="arsenal-lbl">Tech Arsenal</div>
+        <div class="skills" id="skills-grid">
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Go</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>React</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>TypeScript</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Node.js</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>PostgreSQL</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Docker</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Tailwind CSS</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Next.js</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Redis</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>AWS / Vercel</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section id="projects" aria-label="Arsenal">
+    <div class="wrap">
+      <h2 class="sec-head rv">The <em>Arsenal</em></h2>
+      <div class="proj-grid">
+
+        <article class="proj-card" id="pc-bl" aria-label="BehaviorLens project">
+          <div class="card-line" aria-hidden="true"></div>
+          <canvas class="mini-cv" id="cv-bl" aria-hidden="true"></canvas>
+          <h3 class="proj-title">BehaviorLens</h3>
+          <div class="proj-sub">Real-Time User Behavior Observability</div>
+          <p class="proj-desc">Go-powered pipeline ingesting browser events through a stateful rule engine. Detects hesitation, navigation loops, and checkout abandonment in real-time. Live Astro/React dashboard with 2-second polling.</p>
+          <div class="stack-row">
+            <span class="stag">Go</span><span class="stag">React</span><span class="stag">Astro</span><span class="stag">Zustand</span><span class="stag">Docker</span>
+          </div>
+          <div class="chips">
+            <span class="chip">Stateful Rule Engine</span>
+            <span class="chip">Goroutine-per-user Timers</span>
+            <span class="chip">Sub-microsecond Reads</span>
+            <span class="chip">Kafka-Ready Sharding</span>
+          </div>
+          <div class="proj-links">
+            <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="BehaviorLens source code on GitHub">Source ↗</a>
+          </div>
+        </article>
+
+        <article class="proj-card" id="pc-hh" aria-label="HarmoHelp project">
+          <div class="card-line" aria-hidden="true"></div>
+          <canvas class="mini-cv" id="cv-hh" aria-hidden="true"></canvas>
+          <h3 class="proj-title">HarmoHelp</h3>
+          <div class="proj-sub">Hormonal Wellness Platform</div>
+          <p class="proj-desc">Three-service architecture — React 18 SPA, Node.js API, Go authentication microservice. Containerized with Docker Compose. Production-grade security with RS256 JWTs, Argon2id hashing, Razorpay payments, and sliding-window rate limiting.</p>
+          <div class="stack-row">
+            <span class="stag">React 18</span><span class="stag">Go 1.22</span><span class="stag">Node.js</span><span class="stag">Express</span><span class="stag">PostgreSQL</span><span class="stag">Docker</span><span class="stag">Razorpay</span>
+          </div>
+          <div class="chips">
+            <span class="chip">RS256 JWT — 2048-bit RSA</span>
+            <span class="chip">Argon2id Password Hashing</span>
+            <span class="chip">Token Rotation via PostgreSQL Transactions</span>
+            <span class="chip">Razorpay HMAC-SHA256 Verification</span>
+            <span class="chip">Multi-stage Docker (scratch image)</span>
+          </div>
+          <div class="proj-links">
+            <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="HarmoHelp source code on GitHub">Source ↗</a>
+          </div>
+        </article>
+
+        <article class="proj-card" id="pc-cd" aria-label="Chemidex project">
+          <div class="card-line" aria-hidden="true"></div>
+          <canvas class="mini-cv" id="cv-cd" aria-hidden="true"></canvas>
+          <h3 class="proj-title">Chemidex</h3>
+          <div class="proj-sub">AI Crop Recommendation Engine</div>
+          <p class="proj-desc">ML-based system helping farmers select crops using soil nutrient analysis (N, P, K), rainfall, and temperature data. Built for real agricultural impact with minimal-input UX that surfaces complex model outputs clearly.</p>
+          <div class="stack-row">
+            <span class="stag">JavaScript</span><span class="stag">Python</span><span class="stag">Data Analysis</span>
+          </div>
+          <div class="chips">
+            <span class="chip">Multi-parameter Soil Analysis</span>
+            <span class="chip">Climate-Weighted Algorithm</span>
+            <span class="chip">Minimal-Input UX</span>
+          </div>
+          <div class="proj-links">
+            <a href="https://github.com/Aman-Cool/Crop-Recommendation-Weather-Insights-Platform" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="Chemidex source code on GitHub">Source ↗</a>
+          </div>
+        </article>
+
+        <article class="proj-card" id="pc-mr" aria-label="Math-Reality-Edu project">
+          <div class="card-line" aria-hidden="true"></div>
+          <canvas class="mini-cv" id="cv-mr" aria-hidden="true"></canvas>
+          <h3 class="proj-title">Math-Reality-Edu</h3>
+          <div class="proj-sub">Interactive Physics Education Platform</div>
+          <p class="proj-desc">Next.js 14 single-page experience with 11 interactive Canvas visualizations — Fourier transforms, quantum wave packets, Lorenz attractors, Mandelbrot sets. Scientifically rigorous with an accuracy badge system.</p>
+          <div class="stack-row">
+            <span class="stag">Next.js 14</span><span class="stag">TypeScript</span><span class="stag">Tailwind CSS</span><span class="stag">Framer Motion</span><span class="stag">KaTeX</span><span class="stag">Canvas 2D</span>
+          </div>
+          <div class="chips">
+            <span class="chip">7 Hand-Authored Canvas 2D Simulations</span>
+            <span class="chip">Mandelbrot with Smooth Iteration Coloring</span>
+            <span class="chip">Lorenz Attractor (Euler Integration)</span>
+            <span class="chip">Gaussian Wave Packet Dispersion</span>
+            <span class="chip">Zero TypeScript Errors, Strict Mode</span>
+          </div>
+          <div class="proj-links">
+            <a href="https://github.com/Aman-Cool/math-reality-edu" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="Math-Reality-Edu source code on GitHub">Source ↗</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METRICS ===== -->
+  <section id="metrics" aria-label="Telemetry">
+    <div class="wrap">
+      <h2 class="sec-head rv">System <em>Telemetry</em></h2>
+      <div class="metrics-row">
+        <div class="met-card">
+          <div class="met-val" data-target="4" data-count>0</div>
+          <div class="met-lbl">Projects Delivered</div>
+        </div>
+        <div class="met-card">
+          <div class="met-val" data-target="3" data-count>0</div>
+          <div class="met-lbl">Core Languages</div>
+        </div>
+        <div class="met-card">
+          <div class="met-val" data-target="11" data-count>0</div>
+          <div class="met-lbl">Interactive Visualizations</div>
+        </div>
+        <div class="met-card">
+          <div class="met-val inf-pulse" id="inf-val">∞</div>
+          <div class="met-lbl">Problems Solved</div>
+        </div>
+      </div>
+      <div class="hmap-wrap" id="hmap-wrap">
+        <div class="hmap-lbl">Activity Grid</div>
+        <div id="hmap" aria-label="Activity density heatmap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" aria-label="Transmission">
+    <canvas id="rain-cv" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h2 class="sec-head rv">Open <em>Channel</em></h2>
+      <div class="contact-grid">
+        <div>
+          <form id="cf" novalidate aria-label="Contact form">
+            <div class="fgrp">
+              <input type="text" class="finput" id="fi-name" placeholder=" " autocomplete="name" aria-label="Your name" required>
+              <label class="flbl" for="fi-name">Name</label>
+            </div>
+            <div class="fgrp">
+              <input type="email" class="finput" id="fi-email" placeholder=" " autocomplete="email" aria-label="Your email" required>
+              <label class="flbl" for="fi-email">Email</label>
+            </div>
+            <div class="fgrp">
+              <textarea class="finput" id="fi-msg" placeholder=" " aria-label="Your message" required></textarea>
+              <label class="flbl" for="fi-msg">Message</label>
+            </div>
+            <button type="submit" class="send-btn" aria-label="Submit contact form">
+              Send Transmission <span class="arr" aria-hidden="true">→</span>
+            </button>
+          </form>
+        </div>
+        <div class="cinfo rv">
+          <h3>Ready to build something precise.</h3>
+          <p>Whether it's a system that needs hardening, an architecture that needs rethinking, or a problem that needs someone who won't take shortcuts — I'm listening.</p>
+          <div class="social-row">
+            <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer" class="soc" aria-label="GitHub profile">
+              <span class="soc-ring" aria-hidden="true"></span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/aman-cool" target="_blank" rel="noopener noreferrer" class="soc" aria-label="LinkedIn profile">
+              <span class="soc-ring" aria-hidden="true"></span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a href="mailto:aman017102007@gmail.com" class="soc" aria-label="Send email">
+              <span class="soc-ring" aria-hidden="true"></span>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p class="ft-txt">© 2025 Aman Kumar. Precision in the dark. Clarity in the light.</p>
+    <div class="ft-mark" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <polygon points="14,2 26,26 2,26" stroke="#fbbf24" stroke-width="1.5" fill="none"/>
+        <line x1="14" y1="10" x2="14" y2="26" stroke="#fbbf24" stroke-width=".6" opacity=".5"/>
+        <circle cx="14" cy="2" r="1.5" fill="#fbbf24" opacity=".6"/>
+      </svg>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---- Feature detection ---- */
+  const isMobile  = window.innerWidth < 768;
+  const isTouch   = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const noMotion  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (isTouch) document.body.classList.add('is-touch');
+
+  /* ================================================================
+     CUSTOM CURSOR
+  ================================================================ */
+  if (!isTouch && !noMotion) {
+    const dot  = document.getElementById('cur-dot');
+    const ring = document.getElementById('cur-ring');
+    const ghosts = [
+      document.getElementById('cg1'),
+      document.getElementById('cg2'),
+      document.getElementById('cg3'),
+    ];
+
+    ghosts.forEach((g, i) => {
+      const s = 5 - i * 1.2;
+      g.style.width  = s + 'px';
+      g.style.height = s + 'px';
+    });
+
+    let mx = -200, my = -200;
+    let rx = -200, ry = -200;
+    const gPos = ghosts.map(() => ({ x: -200, y: -200 }));
+
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    function tickCursor() {
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+
+      rx += (mx - rx) * 0.14;
+      ry += (my - ry) * 0.14;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+
+      let px = mx, py = my;
+      ghosts.forEach((g, i) => {
+        const lag = 0.22 + i * 0.12;
+        gPos[i].x += (px - gPos[i].x) * lag;
+        gPos[i].y += (py - gPos[i].y) * lag;
+        g.style.left    = gPos[i].x + 'px';
+        g.style.top     = gPos[i].y + 'px';
+        g.style.opacity = (0.28 - i * 0.08).toString();
+        px = gPos[i].x;
+        py = gPos[i].y;
+      });
+      requestAnimationFrame(tickCursor);
+    }
+    tickCursor();
+
+    document.querySelectorAll('a,button,.pill,.proj-card,.soc').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
+    });
+  }
+
+  /* ================================================================
+     HERO CANVAS — PARTICLE FIELD
+  ================================================================ */
+  const hCanvas = document.getElementById('hero-canvas');
+  const hCtx    = hCanvas.getContext('2d');
+  let   particles = [];
+  let   heroRAF;
+
+  function resizeHeroCanvas() {
+    hCanvas.width  = hCanvas.offsetWidth;
+    hCanvas.height = hCanvas.offsetHeight;
+  }
+
+  function buildParticles() {
+    const count = isMobile ? 60 : (window.innerWidth < 1200 ? 120 : 220);
+    particles = Array.from({ length: count }, () => ({
+      x:  Math.random() * hCanvas.width,
+      y:  Math.random() * hCanvas.height,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      r:  Math.random() + 0.5,
+      op: Math.random() * 0.32 + 0.08,
+      col: Math.random() > 0.45 ? '255,255,255' : '200,220,255',
+    }));
+  }
+
+  let scrollY = 0;
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+  function drawParticles() {
+    hCtx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+    const off = scrollY * 0.3;
+
+    particles.forEach((p, i) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = hCanvas.width;
+      if (p.x > hCanvas.width)  p.x = 0;
+      if (p.y < 0) p.y = hCanvas.height;
+      if (p.y > hCanvas.height) p.y = 0;
+
+      const dy = p.y - off;
+      if (dy < -10 || dy > hCanvas.height + 10) return;
+
+      hCtx.beginPath();
+      hCtx.arc(p.x, dy, p.r, 0, Math.PI * 2);
+      hCtx.fillStyle = `rgba(${p.col},${p.op})`;
+      hCtx.fill();
+
+      let conns = 0;
+      for (let j = i + 1; j < particles.length && conns < 3; j++) {
+        const q  = particles[j];
+        const qy = q.y - off;
+        const dx = p.x - q.x;
+        const ddy = dy - qy;
+        const d  = Math.hypot(dx, ddy);
+        if (d < 100) {
+          hCtx.beginPath();
+          hCtx.moveTo(p.x, dy);
+          hCtx.lineTo(q.x, qy);
+          hCtx.strokeStyle = `rgba(255,255,255,${0.055 * (1 - d / 100)})`;
+          hCtx.lineWidth = 0.5;
+          hCtx.stroke();
+          conns++;
+        }
+      }
+    });
+  }
+
+  /* ================================================================
+     SEARCHLIGHT
+  ================================================================ */
+  const sl = document.getElementById('searchlight');
+  let tSX = window.innerWidth / 2,  tSY = window.innerHeight / 2;
+  let cSX = window.innerWidth / 2,  cSY = window.innerHeight / 2;
+  let heroRect = { left: 0, top: 0 };
+
+  function refreshHeroRect() {
+    heroRect = document.getElementById('hero').getBoundingClientRect();
+  }
+  window.addEventListener('scroll', refreshHeroRect, { passive: true });
+  window.addEventListener('resize', refreshHeroRect);
+  refreshHeroRect();
+
+  document.addEventListener('mousemove', e => {
+    tSX = e.clientX - heroRect.left;
+    tSY = e.clientY - heroRect.top;
+  });
+
+  function drawSearchlight() {
+    cSX += (tSX - cSX) * 0.08;
+    cSY += (tSY - cSY) * 0.08;
+    sl.style.background = `radial-gradient(circle 300px at ${cSX}px ${cSY}px,
+      rgba(251,191,36,0.05) 0%,
+      rgba(3,3,3,0.0) 18%,
+      rgba(3,3,3,0.62) 58%,
+      rgba(3,3,3,0.9) 100%)`;
+  }
+
+  /* ================================================================
+     HERO ANIMATION LOOP
+  ================================================================ */
+  function heroLoop() {
+    drawParticles();
+    drawSearchlight();
+    heroRAF = requestAnimationFrame(heroLoop);
+  }
+
+  function initHero() {
+    resizeHeroCanvas();
+    buildParticles();
+    heroLoop();
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(heroRAF);
+    else heroLoop();
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { resizeHeroCanvas(); buildParticles(); }, 250);
+  });
+
+  /* ================================================================
+     TEXT DECRYPTION
+  ================================================================ */
+  const POOL  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&!?';
+  const nameEl = document.getElementById('hero-name');
+  const TARGET = 'Aman Kumar';
+
+  function buildNameSpans() {
+    nameEl.innerHTML = '';
+    TARGET.split('').forEach(ch => {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.dataset.t  = ch;
+      s.textContent = ch === ' ' ? ' ' : ch;
+      nameEl.appendChild(s);
+    });
+  }
+
+  function runDecryption() {
+    buildNameSpans();
+    nameEl.classList.add('vis');
+    const spans = nameEl.querySelectorAll('.ch');
+    let done = 0;
+
+    spans.forEach((span, i) => {
+      if (span.dataset.t === ' ') { done++; return; }
+      let iter = 0;
+      const max = 12;
+      setTimeout(() => {
+        const iv = setInterval(() => {
+          span.textContent = POOL[Math.floor(Math.random() * POOL.length)];
+          span.style.color  = `rgba(251,191,36,${0.3 + Math.random() * 0.7})`;
+          iter++;
+          if (iter >= max) {
+            clearInterval(iv);
+            span.textContent = span.dataset.t;
+            span.style.color  = '#f8fafc';
+            done++;
+            if (done >= spans.length) afterDecrypt();
+          }
+        }, 38);
+      }, i * 62);
+    });
+
+    setTimeout(afterDecrypt, TARGET.length * 62 + max * 38 + 200);
+  }
+
+  let decryptDone = false;
+  function afterDecrypt() {
+    if (decryptDone) return;
+    decryptDone = true;
+    const sub = document.getElementById('hero-sub');
+    sub.classList.add('vis');
+    typewrite('Full-Stack Engineer | Go · React · Node.js · TypeScript', 0, sub);
+  }
+
+  function typewrite(text, idx, el) {
+    el.innerHTML = text.slice(0, idx) + '<span class="blink" aria-hidden="true">|</span>';
+    if (idx <= text.length) {
+      setTimeout(() => typewrite(text, idx + 1, el), 40);
+    } else {
+      setTimeout(() => document.getElementById('hero-cta').classList.add('vis'), 350);
+    }
+  }
+
+  /* ================================================================
+     LOAD SEQUENCE
+  ================================================================ */
+  function bootSequence() {
+    if (noMotion) {
+      document.getElementById('load-veil').style.display = 'none';
+      initHero();
+      buildNameSpans();
+      nameEl.classList.add('vis');
+      nameEl.querySelectorAll('.ch').forEach(s => { s.textContent = s.dataset.t; s.style.color = '#f8fafc'; });
+      const sub = document.getElementById('hero-sub');
+      sub.textContent = 'Full-Stack Engineer | Go · React · Node.js · TypeScript';
+      sub.classList.add('vis');
+      document.getElementById('hero-cta').classList.add('vis');
+      return;
+    }
+
+    setTimeout(() => document.getElementById('load-pulse').classList.add('on'), 150);
+    setTimeout(() => initHero(), 500);
+    setTimeout(() => {
+      document.getElementById('load-veil').classList.add('gone');
+      runDecryption();
+    }, 750);
+    setTimeout(() => {
+      document.getElementById('load-veil').style.display = 'none';
+    }, 1800);
+  }
+
+  /* ================================================================
+     INTERSECTION OBSERVER HELPERS
+  ================================================================ */
+  function observe(el, cb, threshold = 0.1) {
+    if (!el) return;
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { cb(e.target); } });
+    }, { threshold }).observe(el);
+  }
+
+  function observeAll(selector, cb, threshold = 0.1) {
+    document.querySelectorAll(selector).forEach(el => observe(el, cb, threshold));
+  }
+
+  /* Generic .rv elements */
+  observeAll('.rv', el => {
+    el.classList.add('in');
+    new IntersectionObserver(() => {}).observe(el); // disconnect shorthand
+  });
+
+  /* Identity card */
+  observe(document.getElementById('id-card'), el => el.classList.add('in'), 0.2);
+
+  /* Skill pills stagger */
+  observe(document.getElementById('skills-grid'), () => {
+    document.querySelectorAll('.pill').forEach((p, i) =>
+      setTimeout(() => p.classList.add('in'), i * 45));
+  }, 0.1);
+
+  /* Project cards stagger */
+  observe(document.querySelector('.proj-grid'), () => {
+    document.querySelectorAll('.proj-card').forEach((c, i) =>
+      setTimeout(() => c.classList.add('in'), i * 130));
+  }, 0.08);
+
+  /* Metric cards stagger + counters */
+  observe(document.querySelector('.metrics-row'), () => {
+    document.querySelectorAll('.met-card').forEach((c, i) => {
+      setTimeout(() => {
+        c.classList.add('in');
+        const v = c.querySelector('[data-count]');
+        if (v) animCount(v);
+      }, i * 160);
+    });
+  }, 0.15);
+
+  /* Heatmap */
+  observe(document.getElementById('hmap-wrap'), el => el.classList.add('in'), 0.1);
+
+  /* ================================================================
+     COUNTER ANIMATION
+  ================================================================ */
+  function animCount(el) {
+    const target = +el.dataset.target;
+    const t0 = performance.now();
+    const dur = 2000;
+    (function tick(now) {
+      const p = Math.min((now - t0) / dur, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+
+  /* ================================================================
+     HEATMAP
+  ================================================================ */
+  (function buildHeatmap() {
+    const grid = document.getElementById('hmap');
+    const COLORS = ['#0a0a0a','rgba(160,80,0,.3)','rgba(210,120,0,.5)','rgba(245,158,11,.75)','#fbbf24'];
+    for (let w = 0; w < 52; w++) {
+      const col = document.createElement('div');
+      col.className = 'hmap-col';
+      for (let d = 0; d < 7; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'hmap-cell';
+        let lvl = 0;
+        const r = Math.random();
+        if (r > 0.52) lvl = Math.floor(Math.random() * 4) + 1;
+        if ((d === 0 || d === 6) && Math.random() > 0.65) lvl = Math.max(lvl - 1, 0);
+        cell.style.backgroundColor = COLORS[lvl];
+        cell.setAttribute('aria-label', `Activity level ${lvl}`);
+        col.appendChild(cell);
+      }
+      grid.appendChild(col);
+    }
+  })();
+
+  /* ================================================================
+     RAIN EFFECT
+  ================================================================ */
+  (function initRain() {
+    const cv  = document.getElementById('rain-cv');
+    const ctx = cv.getContext('2d');
+    let drops = [];
+
+    function resize() {
+      cv.width  = cv.offsetWidth;
+      cv.height = cv.offsetHeight;
+      drops = Array.from({ length: isMobile ? 28 : 55 }, () => ({
+        x:  Math.random() * cv.width,
+        y:  Math.random() * cv.height,
+        sp: Math.random() * 40 + 18,
+        op: Math.random() * 0.1 + 0.04,
+        ln: Math.random() * 14 + 6,
+        col: Math.random() > 0.5 ? '255,255,255' : '251,191,36',
+      }));
+    }
+
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    let last = 0;
+    function tick(ts) {
+      const dt = Math.min((ts - last) / 1000, 0.05);
+      last = ts;
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      drops.forEach(d => {
+        d.y += d.sp * dt;
+        if (d.y > cv.height + d.ln) { d.y = -d.ln; d.x = Math.random() * cv.width; }
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x, d.y + d.ln);
+        ctx.strokeStyle = `rgba(${d.col},${d.op})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  /* ================================================================
+     MINI CANVASES
+  ================================================================ */
+
+  /* --- BehaviorLens: particle network --- */
+  function initBL() {
+    const cv  = document.getElementById('cv-bl');
+    const ctx = cv.getContext('2d');
+    cv.width  = cv.offsetWidth;
+    cv.height = cv.offsetHeight;
+    const W = cv.width, H = cv.height;
+
+    const nodes = Array.from({ length: 15 }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      r:  Math.random() * 2.5 + 1.5,
+      glow: 0,
+    }));
+
+    let hovNode = -1;
+    cv.parentElement.addEventListener('mousemove', e => {
+      const rect = cv.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      hovNode = nodes.findIndex(n => Math.hypot(n.x - mx, n.y - my) < 18);
+    });
+    cv.parentElement.addEventListener('mouseleave', () => hovNode = -1);
+
+    let pt = 0;
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      pt += 0.04;
+
+      nodes.forEach((n, i) => {
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+
+        const hot = i === hovNode;
+        n.glow += (( hot ? 1 : 0) - n.glow) * 0.1;
+
+        nodes.forEach((m, j) => {
+          if (j <= i) return;
+          const d = Math.hypot(n.x - m.x, n.y - m.y);
+          if (d < 80) {
+            const pulse = 0.5 + 0.5 * Math.sin(pt - d * 0.05);
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(m.x, m.y);
+            ctx.strokeStyle = `rgba(251,191,36,${(1 - d/80) * 0.4 * pulse})`;
+            ctx.lineWidth = 0.6 + n.glow * 0.8;
+            ctx.stroke();
+          }
+        });
+
+        if (n.glow > 0.05) {
+          ctx.shadowColor = '#fbbf24';
+          ctx.shadowBlur  = 14 * n.glow;
+        }
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r + n.glow * 3, 0, Math.PI * 2);
+        ctx.fillStyle = hot ? '#fbbf24' : `rgba(251,191,36,${0.5 + n.glow * 0.5})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  /* --- HarmoHelp: EKG waveform --- */
+  function initHH() {
+    const cv  = document.getElementById('cv-hh');
+    const ctx = cv.getContext('2d');
+    cv.width  = cv.offsetWidth;
+    cv.height = cv.offsetHeight;
+    const W = cv.width, H = cv.height, mid = H / 2;
+    let off = 0;
+
+    function ekg(x) {
+      const period = W * 0.55;
+      const t = ((x % period) + period) % period / period;
+      if (t < 0.35) return Math.sin(t * Math.PI) * 3;
+      if (t < 0.42) return -(t - 0.35) * 90;
+      if (t < 0.45) return (0.48 - t) * 90;
+      if (t < 0.48) return -(t - 0.45) * 90;
+      if (t < 0.56) return Math.sin((t - 0.48) * Math.PI * 2.5) * 7;
+      return Math.sin(t * Math.PI) * 1.5;
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createLinearGradient(0, 0, W, 0);
+      g.addColorStop(0,    'rgba(251,191,36,0)');
+      g.addColorStop(0.25, 'rgba(251,191,36,.75)');
+      g.addColorStop(0.85, 'rgba(251,191,36,.75)');
+      g.addColorStop(1,    'rgba(251,191,36,0)');
+
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const y = mid + ekg(x + off);
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = 1.5;
+      ctx.shadowColor = '#fbbf24';
+      ctx.shadowBlur  = 5;
+      ctx.stroke();
+      ctx.shadowBlur  = 0;
+      off += 1.8;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  /* --- Chemidex: generative plant --- */
+  function initCD() {
+    const cv  = document.getElementById('cv-cd');
+    const ctx = cv.getContext('2d');
+    cv.width  = cv.offsetWidth;
+    cv.height = cv.offsetHeight;
+    const W = cv.width, H = cv.height;
+    let t = 0, grow = 0, growing = false;
+
+    cv.parentElement.addEventListener('mouseenter', () => { growing = true; });
+    cv.parentElement.addEventListener('mouseleave', () => { growing = false; });
+
+    function branch(x, y, angle, len, depth) {
+      if (depth === 0 || len < 2) return;
+      const ex = x + Math.cos(angle) * len;
+      const ey = y + Math.sin(angle) * len;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = `rgba(${depth > 2 ? '90,180,70' : '70,150,55'},${0.25 + depth * 0.12})`;
+      ctx.lineWidth = depth * 0.55;
+      ctx.stroke();
+      if (depth > 1) {
+        const spread = 0.38 + Math.sin(t) * 0.08;
+        branch(ex, ey, angle - spread, len * 0.66, depth - 1);
+        branch(ex, ey, angle + spread, len * 0.66, depth - 1);
+      } else {
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(100,200,80,.6)';
+        ctx.fill();
+      }
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      t += 0.018;
+      if (growing) grow = Math.min(grow + 0.025, 1);
+      const base = 0.3 + grow * 0.7;
+      const stemLen = H * 0.55 * base;
+      const bY = H - 4;
+
+      ctx.beginPath();
+      ctx.moveTo(W/2, bY);
+      ctx.bezierCurveTo(
+        W/2 + Math.sin(t) * 5, bY - stemLen * 0.35,
+        W/2 + Math.sin(t+1) * 4, bY - stemLen * 0.68,
+        W/2, bY - stemLen);
+      ctx.strokeStyle = 'rgba(70,150,55,.8)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      const depth = Math.max(1, Math.floor(grow * 4));
+      branch(W/2, bY - stemLen, -Math.PI/2 - 0.5, 14 * base, depth);
+      branch(W/2, bY - stemLen, -Math.PI/2 + 0.5, 14 * base, depth);
+
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  /* --- Math-Reality-Edu: Lorenz attractor --- */
+  function initMR() {
+    const cv  = document.getElementById('cv-mr');
+    const ctx = cv.getContext('2d');
+    cv.width  = cv.offsetWidth;
+    cv.height = cv.offsetHeight;
+    const W = cv.width, H = cv.height;
+
+    const sigma = 10, rho = 28, beta = 8/3, dt = 0.007;
+    let lx = 0.1, ly = 0, lz = 0;
+    const pts = [];
+    const MAX = 2500;
+    let step = 0;
+
+    /* warm-up */
+    for (let i = 0; i < 600; i++) {
+      const dx = sigma*(ly-lx), dy = lx*(rho-lz)-ly, dz = lx*ly - beta*lz;
+      lx += dx*dt; ly += dy*dt; lz += dz*dt;
+    }
+
+    const scX = W / 42, offX = W / 2;
+    const scZ = H / 36, offZ = H * 0.88;
+
+    function tick() {
+      for (let s = 0; s < 4 && step < MAX; s++) {
+        const dx = sigma*(ly-lx), dy = lx*(rho-lz)-ly, dz = lx*ly - beta*lz;
+        lx += dx*dt; ly += dy*dt; lz += dz*dt;
+        pts.push({ x: lx, z: lz, i: step / MAX });
+        step++;
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      const start = Math.max(0, pts.length - 500);
+      for (let i = start + 1; i < pts.length; i++) {
+        const p  = pts[i];
+        const pp = pts[i-1];
+        const pr = (i - start) / Math.min(500, pts.length);
+        const r  = Math.floor(pr * 251);
+        const g  = Math.floor(pr * 80);
+        const b  = Math.floor((1-pr)*190 + pr*36);
+        ctx.beginPath();
+        ctx.moveTo(pp.x*scX + offX, -pp.z*scZ + offZ);
+        ctx.lineTo(p.x*scX  + offX, -p.z*scZ  + offZ);
+        ctx.strokeStyle = `rgba(${r},${g},${b},${0.35 + pr*0.55})`;
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+      }
+
+      if (step >= MAX) {
+        step = 0; pts.length = 0;
+        lx = 0.1 + Math.random()*0.1; ly = 0; lz = 0;
+        for (let i = 0; i < 600; i++) {
+          const dx = sigma*(ly-lx), dy = lx*(rho-lz)-ly, dz = lx*ly-beta*lz;
+          lx += dx*dt; ly += dy*dt; lz += dz*dt;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  /* Trigger mini canvases on visibility */
+  const started = new Set();
+  const inits = { 'pc-bl': initBL, 'pc-hh': initHH, 'pc-cd': initCD, 'pc-mr': initMR };
+  document.querySelectorAll('.proj-card').forEach(card => {
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && !started.has(card.id)) {
+          started.add(card.id);
+          if (inits[card.id]) inits[card.id]();
+        }
+      });
+    }, { threshold: 0.2 }).observe(card);
+  });
+
+  /* ================================================================
+     CONTACT FORM
+  ================================================================ */
+  document.getElementById('cf').addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('.send-btn');
+    btn.textContent = 'Transmission Sent ✓';
+    btn.style.borderColor = 'rgba(251,191,36,.8)';
+    setTimeout(() => {
+      btn.innerHTML = 'Send Transmission <span class="arr" aria-hidden="true">→</span>';
+      btn.style.borderColor = '';
+      e.target.reset();
+    }, 3200);
+  });
+
+  /* ================================================================
+     BOOT
+  ================================================================ */
+  bootSequence();
+
+})();
+</script>
+</body>
+</html>
