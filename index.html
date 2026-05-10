@@ -616,6 +616,124 @@
     }
     .ft-mark { display: inline-block; opacity: .08; color: var(--amber); }
 
+    /* ---- POKEMON CARD SECTION ---- */
+    #pk-section { padding: 7rem 0; background: var(--black); }
+    .pk-section-inner { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .pk-hint { font-family: var(--mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .2em; color: #1e293b; text-align: center; margin-top: -.5rem; margin-bottom: 2.5rem; }
+
+    .pk-scene {
+      perspective: 1200px;
+      width: 300px; height: 448px;
+      position: relative; margin: 0 auto;
+    }
+
+    .pkcard {
+      position: absolute; inset: 0; border-radius: 18px;
+      background: linear-gradient(155deg, #110608 0%, #080314 35%, #050b12 65%, #0a0608 100%);
+      overflow: hidden;
+      transform-origin: center;
+      transition: transform .5s cubic-bezier(.23,1,.32,1), opacity .45s ease;
+      box-shadow:
+        0 0 0 1.5px rgba(251,191,36,.6),
+        0 0 0 3.5px rgba(251,191,36,.12),
+        0 30px 90px rgba(0,0,0,.88),
+        0 0 80px rgba(251,191,36,.07);
+      user-select: none; will-change: transform; cursor: default;
+    }
+    .pkcard::before {
+      content: ''; position: absolute; inset: 0; border-radius: 18px; z-index: 0;
+      background: linear-gradient(125deg,
+        rgba(255,210,0,.05) 0%, rgba(0,255,200,.04) 20%,
+        rgba(200,0,255,.04) 40%, rgba(0,100,255,.04) 60%,
+        rgba(255,0,100,.04) 80%, rgba(255,210,0,.05) 100%);
+      background-size: 200% 200%;
+      animation: pkholo 5s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes pkholo {
+      0%   { background-position: 0% 0%;     opacity: .5; }
+      100% { background-position: 100% 100%; opacity: 1; }
+    }
+    .pkcard-holo {
+      position: absolute; inset: 0; border-radius: 18px;
+      pointer-events: none; z-index: 2;
+      opacity: 0; transition: opacity .3s; mix-blend-mode: screen;
+    }
+    .pkcard:hover .pkcard-holo { opacity: 1; }
+    .pkcard-foil {
+      position: absolute; inset: 0; border-radius: 18px;
+      pointer-events: none; z-index: 3; opacity: 0; transition: opacity .3s;
+      background-image: repeating-linear-gradient(45deg,
+        transparent 0px, transparent 3px,
+        rgba(255,255,255,.018) 3px, rgba(255,255,255,.018) 4px);
+    }
+    .pkcard:hover .pkcard-foil { opacity: 1; }
+
+    /* Card interior */
+    .pk-inner {
+      position: relative; z-index: 5; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 12px; gap: 7px;
+    }
+    .pk-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(90deg, rgba(251,191,36,.1), rgba(251,191,36,.03));
+      border: 1px solid rgba(251,191,36,.22); border-radius: 8px; padding: 6px 10px;
+    }
+    .pk-stage { font-family: var(--mono); font-size: .47rem; text-transform: uppercase; letter-spacing: .14em; color: rgba(251,191,36,.45); display: block; }
+    .pk-name  { font-size: .9rem; font-weight: 800; color: #f8fafc; letter-spacing: -.01em; }
+    .pk-hp-lbl { font-family: var(--mono); font-size: .46rem; text-transform: uppercase; letter-spacing: .1em; color: rgba(251,191,36,.45); display: block; text-align: right; }
+    .pk-hp-num { display: flex; align-items: baseline; gap: 2px; justify-content: flex-end; }
+    .pk-hp-val { font-family: var(--mono); font-size: 1.45rem; font-weight: 800; color: var(--amber); line-height: 1; }
+    .pk-hp-unit { font-family: var(--mono); font-size: .55rem; color: rgba(251,191,36,.55); }
+
+    .pk-art { flex: 0 0 116px; border-radius: 7px; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.05); overflow: hidden; position: relative; }
+    #pk-art-canvas { display: block; width: 100%; height: 100%; }
+    .pk-art-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(5,5,18,.92) 100%); display: flex; align-items: flex-end; padding: 7px 9px; }
+    .pk-type-badge { font-family: var(--mono); font-size: .5rem; text-transform: uppercase; letter-spacing: .1em; color: var(--amber); background: rgba(251,191,36,.07); border: 1px solid rgba(251,191,36,.28); padding: 2px 7px; border-radius: 4px; }
+
+    .pk-flavor { font-family: var(--mono); font-size: .57rem; color: #334155; font-style: italic; text-align: center; padding: 4px 4px 0; border-top: 1px solid rgba(255,255,255,.04); line-height: 1.5; }
+
+    .pk-stats { display: flex; flex-direction: column; gap: 4px; }
+    .pk-stat {
+      display: flex; align-items: center; gap: 6px;
+      cursor: pointer; border-radius: 5px; padding: 4px 5px;
+      border: 1px solid transparent;
+      transition: background .2s, border-color .2s;
+    }
+    .pk-stat:hover { background: rgba(251,191,36,.07); border-color: rgba(251,191,36,.15); }
+    .pk-stat:hover .pk-stat-nm { color: var(--amber); }
+    .pk-stat-nm { font-family: var(--mono); font-size: .54rem; text-transform: uppercase; letter-spacing: .06em; color: #475569; width: 68px; flex-shrink: 0; transition: color .2s; }
+    .pk-bar { flex: 1; height: 4px; background: rgba(255,255,255,.05); border-radius: 2px; overflow: hidden; }
+    .pk-bar-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1.4s cubic-bezier(.16,1,.3,1); }
+    .pk-stat-v { font-family: var(--mono); font-size: .6rem; color: var(--amber); text-align: right; width: 42px; flex-shrink: 0; }
+
+    .pk-rarity { display: flex; align-items: center; justify-content: space-between; padding: 1px 2px; }
+    .pk-stars { font-size: .68rem; letter-spacing: 1px; color: var(--amber); }
+    .pk-edition { font-family: var(--mono); font-size: .44rem; color: #1e293b; letter-spacing: .06em; }
+
+    /* Card states */
+    .pkcard.slid-out { transform: translateX(-115%) rotateY(-18deg) !important; opacity: 0; pointer-events: none; }
+    .pkcard-detail   { transform: translateX(115%) rotateY(15deg); opacity: 0; pointer-events: none; }
+    .pkcard-detail.active { transform: translateX(0) rotateY(0); opacity: 1; pointer-events: all; }
+
+    /* Detail card interior */
+    .pk-detail-inner { position: relative; z-index: 5; height: 100%; display: flex; flex-direction: column; padding: 14px; gap: 8px; overflow: hidden; }
+    .pk-back { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--mono); font-size: .6rem; color: rgba(251,191,36,.5); cursor: pointer; background: none; border: none; padding: 0; transition: color .2s; letter-spacing: .05em; }
+    .pk-back:hover { color: var(--amber); }
+    .pk-d-label { font-family: var(--mono); font-size: .5rem; text-transform: uppercase; letter-spacing: .18em; color: rgba(251,191,36,.45); }
+    .pk-d-title { font-size: 1.02rem; font-weight: 800; color: #f8fafc; line-height: 1.2; }
+    .pk-d-big { font-family: var(--mono); font-size: 2.1rem; font-weight: 800; color: var(--amber); line-height: 1; }
+    .pk-d-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 2px; }
+    .pk-d-scroll::-webkit-scrollbar { width: 2px; }
+    .pk-d-scroll::-webkit-scrollbar-thumb { background: rgba(251,191,36,.2); border-radius: 1px; }
+    .pk-d-row { background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.05); border-left: 2px solid rgba(251,191,36,.45); border-radius: 0 6px 6px 0; padding: 6px 9px; }
+    .pk-d-row-t { font-family: var(--mono); font-size: .56rem; color: var(--amber); opacity: .8; margin-bottom: 2px; }
+    .pk-d-row-b { font-size: .7rem; color: #64748b; line-height: 1.5; }
+    .pk-d-elite { background: rgba(251,191,36,.04); border: 1px solid rgba(251,191,36,.14); border-radius: 6px; padding: 9px; }
+    .pk-d-elite-lbl { font-family: var(--mono); font-size: .5rem; text-transform: uppercase; letter-spacing: .15em; color: rgba(251,191,36,.45); margin-bottom: 4px; }
+    .pk-d-elite p { font-size: .69rem; color: #94a3b8; line-height: 1.6; }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       body { cursor: auto; }
@@ -875,6 +993,186 @@
         <div class="oss-ai-lbl">Methodology</div>
         <p>I use AI to accelerate codebase onboarding — rapidly mapping architecture, tracing call paths through unfamiliar systems, and constructing controlled environments designed to surface bugs before they reach production. The target is failure modes that cause real data loss, service disruption, or audience impact at scale: the kind of bugs that are invisible until the system is under load, and catastrophic once they surface.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ===== POKEMON CARD ===== -->
+  <section id="pk-section" aria-label="Developer Card">
+    <div class="wrap pk-section-inner">
+      <h2 class="sec-head rv" style="text-align:center;margin-bottom:.75rem">Developer <em>Card</em></h2>
+      <p class="pk-hint">Click any stat for deep analysis · Swipe right to return</p>
+      <div class="pk-scene" id="pk-scene">
+
+        <!-- MAIN CARD -->
+        <div class="pkcard" id="pkcard-main" aria-label="GitHub stats card for Aman Kumar">
+          <div class="pkcard-holo" id="pk-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-inner">
+            <div class="pk-header">
+              <div>
+                <span class="pk-stage">Legendary · Full-Stack</span>
+                <span class="pk-name">Aman Kumar</span>
+              </div>
+              <div>
+                <span class="pk-hp-lbl">Merged PRs</span>
+                <div class="pk-hp-num">
+                  <span class="pk-hp-val" id="pk-hp-anim">0</span>
+                  <span class="pk-hp-unit">★</span>
+                </div>
+              </div>
+            </div>
+            <div class="pk-art" aria-hidden="true">
+              <canvas id="pk-art-canvas"></canvas>
+              <div class="pk-art-overlay">
+                <span class="pk-type-badge">⬡ CLOUD-NATIVE · BUG HUNTER</span>
+              </div>
+            </div>
+            <div class="pk-flavor">"Finds the bugs production can't afford to have."</div>
+            <div class="pk-stats" role="list">
+              <div class="pk-stat" data-stat="merged" role="listitem button" tabindex="0" aria-label="Merged PRs — click for detail">
+                <span class="pk-stat-nm">Merged PRs</span>
+                <div class="pk-bar"><div class="pk-bar-fill" data-pct="96%" style="background:linear-gradient(90deg,rgba(251,191,36,.65),#fbbf24)"></div></div>
+                <span class="pk-stat-v">58</span>
+              </div>
+              <div class="pk-stat" data-stat="reach" role="listitem button" tabindex="0" aria-label="Reach — click for detail">
+                <span class="pk-stat-nm">Reach</span>
+                <div class="pk-bar"><div class="pk-bar-fill" data-pct="90%" style="background:linear-gradient(90deg,rgba(96,165,250,.5),#60a5fa)"></div></div>
+                <span class="pk-stat-v">18 Orgs</span>
+              </div>
+              <div class="pk-stat" data-stat="bugkill" role="listitem button" tabindex="0" aria-label="Bug Kill Rate — click for detail">
+                <span class="pk-stat-nm">Bug Kill</span>
+                <div class="pk-bar"><div class="pk-bar-fill" data-pct="85%" style="background:linear-gradient(90deg,rgba(248,113,113,.5),#f87171)"></div></div>
+                <span class="pk-stat-v">85%</span>
+              </div>
+              <div class="pk-stat" data-stat="concur" role="listitem button" tabindex="0" aria-label="Concurrent fixes — click for detail">
+                <span class="pk-stat-nm">Concur</span>
+                <div class="pk-bar"><div class="pk-bar-fill" data-pct="88%" style="background:linear-gradient(90deg,rgba(167,139,250,.5),#a78bfa)"></div></div>
+                <span class="pk-stat-v">8 Fixed</span>
+              </div>
+              <div class="pk-stat" data-stat="infra" role="listitem button" tabindex="0" aria-label="Infrastructure level — click for detail">
+                <span class="pk-stat-nm">Infra Lvl</span>
+                <div class="pk-bar"><div class="pk-bar-fill" data-pct="99%" style="background:linear-gradient(90deg,rgba(52,211,153,.5),#34d399)"></div></div>
+                <span class="pk-stat-v">CNCF</span>
+              </div>
+            </div>
+            <div class="pk-rarity">
+              <span class="pk-stars">★★★</span>
+              <span class="pk-edition">GITHUB · 2025 EDITION · 001/001</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DETAIL: MERGED PRs -->
+        <div class="pkcard pkcard-detail" data-stat="merged" aria-label="Merged PRs detail">
+          <div class="pkcard-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-detail-inner">
+            <button class="pk-back" aria-label="Return to main card">← Back</button>
+            <div>
+              <div class="pk-d-label">Stat Analysis · Merged PRs</div>
+              <div class="pk-d-title">58 Merged Pull Requests</div>
+              <div class="pk-d-big">21 Repos</div>
+            </div>
+            <div class="pk-d-scroll">
+              <div class="pk-d-row"><div class="pk-d-row-t">eclipse-sw360 — 14 PRs</div><div class="pk-d-row-b">Enterprise Java compliance tooling for global software orgs. Thrift RPC layer, REST API, attachment lifecycle — the full stack of a complex codebase.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh — 8 PRs</div><div class="pk-d-row-b">CNCF batch scheduler for Kubernetes ML workloads. Scheduler-level correctness fixes — the kind that can silently starve jobs at scale.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Kuadrant/mcp-gateway — 3 PRs</div><div class="pk-d-row-b">Three-PR sequence fixing progressively deeper layers of the same session cache bug: map race → copy-on-write → Redis context cancellation.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">hyperledger-labs/fabric-token-sdk — 3 PRs</div><div class="pk-d-row-b">Blockchain asset tokenization. Fixed 5 silent asset-safety bugs across selector, storage, and HTLC subsystems in a single PR.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">+ 17 more organizations</div><div class="pk-d-row-b">cilium · karmada · kro · fluxcd · rattler · AIDRIN · openyurt · kube-burner · kyverno · HSF/phoenix · edulinq · autograder · flux-operator · compliance-trestle · flix2</div></div>
+            </div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>58 PRs across 21 distinct production systems means rapid, deep codebase onboarding across Go, Java, Rust, Python, and TypeScript — every single time, cold, no handholding.</p></div>
+          </div>
+        </div>
+
+        <!-- DETAIL: REACH -->
+        <div class="pkcard pkcard-detail" data-stat="reach" aria-label="Reach detail">
+          <div class="pkcard-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-detail-inner">
+            <button class="pk-back" aria-label="Return to main card">← Back</button>
+            <div>
+              <div class="pk-d-label">Stat Analysis · Reach</div>
+              <div class="pk-d-title">18 Organizations</div>
+              <div class="pk-d-big">5 Langs</div>
+            </div>
+            <div class="pk-d-scroll">
+              <div class="pk-d-row"><div class="pk-d-row-t">Go — 11 orgs</div><div class="pk-d-row-b">Kubernetes ecosystem: volcano, cilium, karmada, kro, fluxcd, openyurt, kube-burner, kuadrant, edulinq, agentcube, kyverno. Goroutines, channels, scheduler internals.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Java — 1 org, 14 PRs</div><div class="pk-d-row-b">eclipse-sw360 alone. Deep familiarity with the Thrift RPC layer, Spring REST controllers, and the attachment/release lifecycle across a massive enterprise Java codebase.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Rust — 1 org</div><div class="pk-d-row-b">conda/rattler — package resolution engine. Fixed bz2 cache state being overwritten by zst state, and timestamp-based dedup logic in resolvo solver.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Python — 2 orgs</div><div class="pk-d-row-b">AIDRIN (AI data readiness), compliance-trestle (OSCAL). Fixed HDF5 fill value handling and diamond dependency resolution in profile composition.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">TypeScript — 1 org</div><div class="pk-d-row-b">HSF/phoenix — scientific event visualization for particle physics. Fixed stale outline state on track extension in a WebGL/Three.js renderer.</div></div>
+            </div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>Cross-ecosystem fluency at this depth is rare. The same precision applies in Go schedulers, Java Thrift layers, Rust resolvers, and Python data pipelines. That's a way of thinking, not a list of languages.</p></div>
+          </div>
+        </div>
+
+        <!-- DETAIL: BUG KILL -->
+        <div class="pkcard pkcard-detail" data-stat="bugkill" aria-label="Bug kill rate detail">
+          <div class="pkcard-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-detail-inner">
+            <button class="pk-back" aria-label="Return to main card">← Back</button>
+            <div>
+              <div class="pk-d-label">Stat Analysis · Bug Kill</div>
+              <div class="pk-d-title">Bug Fix Rate</div>
+              <div class="pk-d-big">85%</div>
+            </div>
+            <div class="pk-d-scroll">
+              <div class="pk-d-row"><div class="pk-d-row-t">Silent Failures — 9 PRs</div><div class="pk-d-row-b">sw360 returning 200 on write failure, fluxcd logging success after reconcile failure, AIDRIN returning SUCCESS on import error. All ship without a test failing.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Race Conditions — 8 PRs</div><div class="pk-d-row-b">Concurrent map writes in Kuadrant session cache, submission limit race in autograder, eviction rollback atomicity in volcano. Non-deterministic. Silent until load hits.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Resource Leaks — 6 PRs</div><div class="pk-d-row-b">Thrift client leaks in sw360, Redis session context leak in Kuadrant, token lock leaked on bad quantity in fabric-token-sdk. Never surface in testing.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Scheduler Correctness — 5 PRs</div><div class="pk-d-row-b">Double-counting inqueue resources in volcano's proportion and capacity plugins, nil panic in hierarchical queue mode, uncommitted eviction propagation.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Data Integrity — 5 PRs</div><div class="pk-d-row-b">Obligation accumulation in sw360 DOCX reports, CycloneDX metadata loss on release creation, clearing state priority logic errors.</div></div>
+            </div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>These bugs don't surface in CI. They appear under production load with real data and real audiences. Finding them requires reading distributed systems code at the level it was designed — not the level it was documented.</p></div>
+          </div>
+        </div>
+
+        <!-- DETAIL: CONCUR -->
+        <div class="pkcard pkcard-detail" data-stat="concur" aria-label="Concurrent fixes detail">
+          <div class="pkcard-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-detail-inner">
+            <button class="pk-back" aria-label="Return to main card">← Back</button>
+            <div>
+              <div class="pk-d-label">Stat Analysis · Concurrent Fixes</div>
+              <div class="pk-d-title">Concurrency Bugs Killed</div>
+              <div class="pk-d-big">8</div>
+            </div>
+            <div class="pk-d-scroll">
+              <div class="pk-d-row"><div class="pk-d-row-t">Kuadrant/mcp-gateway #872 → #888 → #911</div><div class="pk-d-row-b">Concurrent map write race in session cache. Three-PR sequence: mutex fix → maps.Clone copy-on-write → context.Background() on Redis session closer.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano #5010 + #5067 + #5130</div><div class="pk-d-row-b">Preemption eviction rollback wasn't atomic — evictions from nodes we didn't use got committed. priority/high label. Three linked PRs fixing the same class of bug in different plugins.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">edulinq/autograder-server #207</div><div class="pk-d-row-b">Submission limit check passed by two goroutines before either committed. Classic TOCTOU race under concurrent requests.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">fabric-token-sdk #1530</div><div class="pk-d-row-b">Token lock acquired in sherdlock selector, error returned early on bad quantity, lock never released. Goroutine holds lock until process restart.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">edulinq/autograder-server #222</div><div class="pk-d-row-b">Missing Unlock() after TryLock in stale lock cleanup path. Goroutine exits the if-block holding the lock — deadlock waiting to happen.</div></div>
+            </div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>Concurrency bugs are non-deterministic, often silent, and only surface under specific timing conditions. Finding 8 across 5 different production codebases is a pattern of thinking — not luck.</p></div>
+          </div>
+        </div>
+
+        <!-- DETAIL: INFRA -->
+        <div class="pkcard pkcard-detail" data-stat="infra" aria-label="Infrastructure level detail">
+          <div class="pkcard-holo" aria-hidden="true"></div>
+          <div class="pkcard-foil" aria-hidden="true"></div>
+          <div class="pk-detail-inner">
+            <button class="pk-back" aria-label="Return to main card">← Back</button>
+            <div>
+              <div class="pk-d-label">Stat Analysis · Infrastructure Level</div>
+              <div class="pk-d-title">CNCF Critical Infrastructure</div>
+              <div class="pk-d-big">Planetary</div>
+            </div>
+            <div class="pk-d-scroll">
+              <div class="pk-d-row"><div class="pk-d-row-t">cilium/cilium #43902 — Backported: v1.18 + v1.19</div><div class="pk-d-row-b">eBPF-based networking for Kubernetes. Fix was serious enough for maintainers to ship to two stable release branches — meaning it landed in production clusters worldwide.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano — 7 PRs, priority/high</div><div class="pk-d-row-b">CNCF batch scheduler running ML training jobs at scale. Fixes include nil panic in hierarchical queue mode and double-counting inqueue resources in the scheduler core.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">karmada-io/karmada — Divide-by-zero in spread constraint</div><div class="pk-d-row-b">Multi-cluster federation control plane. Divide-by-zero in the spread constraint calculation — a crash in production multi-cluster orchestration, triggered at runtime.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">fluxcd/flux2 — 2 PRs</div><div class="pk-d-row-b">GitOps delivery for Kubernetes. Fixed exit code 0 on resume failure and success log emitted after reconciliation error — both invisible failures in automated pipelines.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">kubernetes-sigs/kro — 2 PRs</div><div class="pk-d-row-b">Kubernetes Resource Orchestrator. Fixed flaky integration test and CRD deletion handling so RGDs don't get stuck in Active state permanently.</div></div>
+            </div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>When cilium backports your fix to two stable releases, the bug was real, the fix was correct, and the reviewers trusted the code enough to ship it to production clusters running at planetary scale.</p></div>
+          </div>
+        </div>
+
+      </div><!-- end pk-scene -->
     </div>
   </section>
 
@@ -1671,6 +1969,142 @@
       e.target.reset();
     }, 3200);
   });
+
+  /* ================================================================
+     POKEMON CARD
+  ================================================================ */
+  function initPokemonCard() {
+    const mainCard = document.getElementById('pkcard-main');
+    if (!mainCard) return;
+    const holo = document.getElementById('pk-holo');
+    let activeDetail = null;
+    let touchStartX = 0;
+
+    function applyTilt(card, e, maxTilt) {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top)  / r.height;
+      card.style.transform = `perspective(900px) rotateX(${(y-.5)*-maxTilt}deg) rotateY(${(x-.5)*maxTilt}deg) scale(1.04)`;
+      const h = card.querySelector('.pkcard-holo');
+      if (h) h.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%,
+        rgba(255,220,80,.28) 0%, rgba(255,0,220,.18) 28%,
+        rgba(0,180,255,.15) 58%, rgba(0,255,120,.08) 82%, transparent 100%)`;
+    }
+
+    mainCard.addEventListener('mousemove', e => applyTilt(mainCard, e, 22));
+    mainCard.addEventListener('mouseleave', () => { mainCard.style.transform = ''; });
+
+    document.querySelectorAll('.pkcard-detail').forEach(dc => {
+      dc.addEventListener('mousemove', e => applyTilt(dc, e, 16));
+      dc.addEventListener('mouseleave', () => { dc.style.transform = ''; });
+    });
+
+    function showDetail(statKey) {
+      const detail = document.querySelector(`.pkcard-detail[data-stat="${statKey}"]`);
+      if (!detail || activeDetail === statKey) return;
+      mainCard.classList.add('slid-out');
+      setTimeout(() => detail.classList.add('active'), 260);
+      activeDetail = statKey;
+    }
+
+    function hideDetail() {
+      if (!activeDetail) return;
+      const detail = document.querySelector(`.pkcard-detail[data-stat="${activeDetail}"]`);
+      if (detail) { detail.classList.remove('active'); detail.style.transform = ''; }
+      setTimeout(() => mainCard.classList.remove('slid-out'), 60);
+      activeDetail = null;
+    }
+
+    document.querySelectorAll('.pk-stat[data-stat]').forEach(s => {
+      s.addEventListener('click', () => showDetail(s.dataset.stat));
+      s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') showDetail(s.dataset.stat); });
+    });
+    document.querySelectorAll('.pk-back').forEach(btn => btn.addEventListener('click', hideDetail));
+
+    /* Touch swipe right = back */
+    const scene = document.getElementById('pk-scene');
+    scene.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    scene.addEventListener('touchend',   e => { if (activeDetail && e.changedTouches[0].clientX - touchStartX > 55) hideDetail(); }, { passive: true });
+
+    /* Animate bars + HP counter on reveal */
+    observe(mainCard, () => {
+      const hp = document.getElementById('pk-hp-anim');
+      if (hp) {
+        const t0 = performance.now();
+        (function tick(now) {
+          const p = Math.min((now - t0) / 1600, 1);
+          hp.textContent = Math.round((1 - Math.pow(1-p, 3)) * 58);
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      }
+      setTimeout(() => document.querySelectorAll('.pk-bar-fill').forEach(b => { b.style.width = b.dataset.pct; }), 450);
+    }, 0.3);
+
+    initPkArt();
+  }
+
+  function initPkArt() {
+    const canvas = document.getElementById('pk-art-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width  = canvas.offsetWidth  || 276;
+    canvas.height = canvas.offsetHeight || 116;
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+
+    const orgs = ['cilium','volcano','sw360','kuadrant','kro','flux','karmada','rattler','AIDRIN','openyurt','fabric','kube-b','phoenix','autogrd','kyverno','oscal','flix2'];
+    const nodes = orgs.map((_, i) => {
+      const angle = (i / orgs.length) * Math.PI * 2 - Math.PI / 2;
+      const r = 25 + (i % 4) * 9;
+      return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r, r: 1.4 + Math.random() * .8, pulse: Math.random() * Math.PI * 2, spd: .018 + Math.random() * .014 };
+    });
+
+    let t = 0;
+    (function tick() {
+      ctx.clearRect(0, 0, W, H);
+      t += .02;
+
+      /* grid dots */
+      ctx.fillStyle = 'rgba(255,255,255,.032)';
+      for (let gx = 0; gx < W; gx += 14) for (let gy = 0; gy < H; gy += 14) {
+        ctx.beginPath(); ctx.arc(gx, gy, .4, 0, Math.PI*2); ctx.fill();
+      }
+
+      nodes.forEach((n, i) => {
+        n.pulse += n.spd;
+        const pi = .45 + .45 * Math.sin(n.pulse);
+
+        /* connection line */
+        const g = ctx.createLinearGradient(cx, cy, n.x, n.y);
+        g.addColorStop(0, `rgba(251,191,36,${.52 * pi})`);
+        g.addColorStop(1, 'rgba(251,191,36,0)');
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(n.x, n.y);
+        ctx.strokeStyle = g; ctx.lineWidth = .45 + pi * .35; ctx.stroke();
+
+        /* travelling data packet */
+        const pr = ((t * .38 + i * .17) % 1);
+        ctx.beginPath();
+        ctx.arc(cx + (n.x-cx)*pr, cy + (n.y-cy)*pr, 1.1, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,220,80,${(1-pr)*.85})`; ctx.fill();
+
+        /* repo node */
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(251,191,36,${.32 + pi*.42})`; ctx.fill();
+      });
+
+      /* centre node — Aman */
+      const cg = .55 + .45 * Math.sin(t * 1.15);
+      ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 14 * cg;
+      ctx.beginPath(); ctx.arc(cx, cy, 4.5 + cg * 1.8, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(251,191,36,${.65 + cg*.3})`; ctx.fill();
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(tick);
+    })();
+  }
+
+  /* Trigger on scroll */
+  observe(document.getElementById('pk-section'), () => initPokemonCard(), 0.15);
 
   /* ================================================================
      BOOT
