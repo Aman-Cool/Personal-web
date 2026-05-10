@@ -393,6 +393,76 @@
     }
     .proj-link:hover::after { width: 100%; }
 
+    /* ---- CARD CLICK ---- */
+    .proj-card[data-href] { cursor: pointer; }
+
+    /* ---- OSS SECTION ---- */
+    #oss { padding: 7rem 0; background: var(--black-2); }
+
+    .oss-intro {
+      max-width: 820px;
+      margin-bottom: 3.5rem;
+    }
+    .oss-intro p {
+      font-size: 1.02rem;
+      line-height: 1.88;
+      color: #94a3b8;
+      margin-bottom: 1.1rem;
+    }
+    .oss-intro p:last-child { margin-bottom: 0; }
+
+    .oss-lbl {
+      font-family: var(--mono);
+      font-size: .62rem; text-transform: uppercase;
+      letter-spacing: .18em; color: var(--amber);
+      opacity: .55; margin-bottom: 1rem;
+    }
+
+    .oss-grid {
+      display: flex; flex-wrap: wrap;
+      gap: .7rem;
+    }
+
+    .org-tag {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .5rem 1rem;
+      background: rgba(255,255,255,.02);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: .45rem;
+      font-family: var(--mono); font-size: .78rem;
+      color: #64748b; text-decoration: none;
+      opacity: 0;
+      transition: opacity .5s, border-color .3s, color .3s, background .3s, transform .25s;
+    }
+    .org-tag.in { opacity: 1; }
+    .org-tag:hover {
+      border-color: rgba(251,191,36,.5);
+      color: var(--amber);
+      background: rgba(251,191,36,.04);
+      transform: translateY(-2px);
+    }
+    .org-tag svg { width: 10px; height: 10px; opacity: .5; flex-shrink: 0; }
+
+    .oss-ai {
+      margin-top: 3rem;
+      padding: 1.5rem 1.75rem;
+      background: rgba(251,191,36,.03);
+      border: 1px solid rgba(251,191,36,.12);
+      border-left: 3px solid rgba(251,191,36,.5);
+      border-radius: 0 .75rem .75rem 0;
+      max-width: 820px;
+    }
+    .oss-ai-lbl {
+      font-family: var(--mono); font-size: .6rem;
+      text-transform: uppercase; letter-spacing: .18em;
+      color: var(--amber); opacity: .65;
+      margin-bottom: .6rem;
+    }
+    .oss-ai p {
+      font-size: .92rem; line-height: 1.8;
+      color: #64748b;
+    }
+
     /* ---- METRICS ---- */
     #metrics { padding: 6rem 0; background: var(--navy); }
 
@@ -616,7 +686,7 @@
           </div>
           <div class="id-row">
             <div class="id-lbl">Role</div>
-            <div class="id-val">Full-Stack Engineer</div>
+            <div class="id-val">Full-Stack Engineer · Open Source Contributor</div>
           </div>
           <div class="id-row">
             <div class="id-lbl">Focus</div>
@@ -632,6 +702,7 @@
         <div class="narrative rv">
           <p>I build systems that hold under pressure. My work lives at the intersection of performance engineering and security architecture — where every design decision is deliberate and every abstraction earns its place.</p>
           <p>From Go microservices handling concurrent event streams to React interfaces that surface complex data cleanly, I operate across the full stack with the same standard: robust, observable, and built to scale without surprise.</p>
+          <p>I'm an active open source contributor — working across production-grade infrastructure projects spanning Kubernetes operators, distributed systems, security tooling, and scientific computing platforms. I contribute where the code actually runs at scale.</p>
           <p>Security is not a feature I add after the fact. It's a constraint I design around from the first line — production-grade authentication, cryptographic integrity, and failure-tolerant pipelines are the baseline, not the finish line.</p>
         </div>
       </div>
@@ -659,7 +730,7 @@
       <h2 class="sec-head rv">The <em>Arsenal</em></h2>
       <div class="proj-grid">
 
-        <article class="proj-card" id="pc-bl" aria-label="BehaviorLens project">
+        <article class="proj-card" id="pc-bl" data-href="https://github.com/Aman-Cool/behaviorlens" aria-label="BehaviorLens project — click to open repository">
           <div class="card-line" aria-hidden="true"></div>
           <canvas class="mini-cv" id="cv-bl" aria-hidden="true"></canvas>
           <h3 class="proj-title">BehaviorLens</h3>
@@ -675,11 +746,11 @@
             <span class="chip">Kafka-Ready Sharding</span>
           </div>
           <div class="proj-links">
-            <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="BehaviorLens source code on GitHub">Source ↗</a>
+            <a href="https://github.com/Aman-Cool/behaviorlens" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="BehaviorLens source code on GitHub">Source ↗</a>
           </div>
         </article>
 
-        <article class="proj-card" id="pc-hh" aria-label="HarmoHelp project">
+        <article class="proj-card" id="pc-hh" data-href="https://github.com/Aman-Cool/hormohelp" aria-label="HarmoHelp project — click to open repository">
           <div class="card-line" aria-hidden="true"></div>
           <canvas class="mini-cv" id="cv-hh" aria-hidden="true"></canvas>
           <h3 class="proj-title">HarmoHelp</h3>
@@ -696,11 +767,11 @@
             <span class="chip">Multi-stage Docker (scratch image)</span>
           </div>
           <div class="proj-links">
-            <a href="https://github.com/Aman-Cool" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="HarmoHelp source code on GitHub">Source ↗</a>
+            <a href="https://github.com/Aman-Cool/hormohelp" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="HarmoHelp source code on GitHub">Source ↗</a>
           </div>
         </article>
 
-        <article class="proj-card" id="pc-cd" aria-label="Chemidex project">
+        <article class="proj-card" id="pc-cd" data-href="https://github.com/Aman-Cool/Chemidex" aria-label="Chemidex project — click to open repository">
           <div class="card-line" aria-hidden="true"></div>
           <canvas class="mini-cv" id="cv-cd" aria-hidden="true"></canvas>
           <h3 class="proj-title">Chemidex</h3>
@@ -715,11 +786,11 @@
             <span class="chip">Minimal-Input UX</span>
           </div>
           <div class="proj-links">
-            <a href="https://github.com/Aman-Cool/Crop-Recommendation-Weather-Insights-Platform" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="Chemidex source code on GitHub">Source ↗</a>
+            <a href="https://github.com/Aman-Cool/Chemidex" target="_blank" rel="noopener noreferrer" class="proj-link" aria-label="Chemidex source code on GitHub">Source ↗</a>
           </div>
         </article>
 
-        <article class="proj-card" id="pc-mr" aria-label="Math-Reality-Edu project">
+        <article class="proj-card" id="pc-mr" data-href="https://github.com/Aman-Cool/math-reality-edu" aria-label="Math-Reality-Edu project — click to open repository">
           <div class="card-line" aria-hidden="true"></div>
           <canvas class="mini-cv" id="cv-mr" aria-hidden="true"></canvas>
           <h3 class="proj-title">Math-Reality-Edu</h3>
@@ -740,6 +811,69 @@
           </div>
         </article>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OPEN SOURCE ===== -->
+  <section id="oss" aria-label="Open Source Contributions">
+    <div class="wrap">
+      <h2 class="sec-head rv">Open <em>Source</em></h2>
+      <div class="oss-intro rv">
+        <p>Active contributor to production-grade open source infrastructure — distributed systems, Kubernetes operators, security tooling, scientific platforms, and high-performance data pipelines. I go in where the code runs at scale.</p>
+      </div>
+
+      <div class="oss-lbl">Contributed Organisations</div>
+      <div class="oss-grid" id="oss-grid">
+        <a href="https://github.com/volcano-sh/volcano" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Volcano on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          volcano-sh
+        </a>
+        <a href="https://github.com/eclipse-sw360/sw360" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="SW360 on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          eclipse-sw360
+        </a>
+        <a href="https://github.com/Kuadrant" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Kuadrant on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          Kuadrant
+        </a>
+        <a href="https://github.com/hyperledger-labs/fabric-token-sdk" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Fabric Token SDK on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          fabric-token-sdk
+        </a>
+        <a href="https://github.com/conda/rattler" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Rattler on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          conda / rattler
+        </a>
+        <a href="https://github.com/AIDRIN/AIDRIN" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="AIDRIN on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          AIDRIN
+        </a>
+        <a href="https://github.com/kro-run/kro" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Kro on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          kro-run / kro
+        </a>
+        <a href="https://github.com/cilium/cilium" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Cilium on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          cilium
+        </a>
+        <a href="https://github.com/openyurtio/openyurt" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="OpenYurt on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          openyurtio
+        </a>
+        <a href="https://github.com/HSF/phoenix" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="HSF Phoenix on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          HSF / phoenix
+        </a>
+        <a href="https://github.com/flix2" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Flix2 on GitHub">
+          <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          flix2
+        </a>
+      </div>
+
+      <div class="oss-ai rv">
+        <div class="oss-ai-lbl">Methodology</div>
+        <p>I use AI to accelerate codebase onboarding — rapidly mapping architecture, tracing call paths through unfamiliar systems, and constructing controlled environments designed to surface bugs before they reach production. The target is failure modes that cause real data loss, service disruption, or audience impact at scale: the kind of bugs that are invisible until the system is under load, and catastrophic once they surface.</p>
       </div>
     </div>
   </section>
@@ -1504,6 +1638,24 @@
       });
     }, { threshold: 0.2 }).observe(card);
   });
+
+  /* ================================================================
+     PROJECT CARD CLICK
+  ================================================================ */
+  document.querySelectorAll('.proj-card[data-href]').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      window.open(card.dataset.href, '_blank', 'noopener,noreferrer');
+    });
+  });
+
+  /* ================================================================
+     OSS ORG TAGS STAGGER
+  ================================================================ */
+  observe(document.getElementById('oss-grid'), () => {
+    document.querySelectorAll('.org-tag').forEach((t, i) =>
+      setTimeout(() => t.classList.add('in'), i * 55));
+  }, 0.1);
 
   /* ================================================================
      CONTACT FORM
