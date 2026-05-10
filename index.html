@@ -628,10 +628,10 @@
     }
 
     .pkcard {
-      position: absolute; inset: 0; border-radius: 18px;
+      position: absolute; left: 0; top: 0; width: 300px; height: 448px; border-radius: 18px;
       background: linear-gradient(155deg, #110608 0%, #080314 35%, #050b12 65%, #0a0608 100%);
       overflow: hidden;
-      transform-origin: center;
+      transform-origin: 0 0;
       transition: transform .5s cubic-bezier(.23,1,.32,1), opacity .45s ease;
       box-shadow:
         0 0 0 1.5px rgba(251,191,36,.6),
@@ -712,10 +712,47 @@
     .pk-stars { font-size: .68rem; letter-spacing: 1px; color: var(--amber); }
     .pk-edition { font-family: var(--mono); font-size: .44rem; color: #1e293b; letter-spacing: .06em; }
 
-    /* Card states */
-    .pkcard.slid-out { transform: translateX(-115%) rotateY(-18deg) !important; opacity: 0; pointer-events: none; }
-    .pkcard-detail   { transform: translateX(115%) rotateY(15deg); opacity: 0; pointer-events: none; }
-    .pkcard-detail.active { transform: translateX(0) rotateY(0); opacity: 1; pointer-events: all; }
+    /* Card states — managed entirely by JS state machine */
+    .pk-scroll-wrap {
+      overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px; scrollbar-width: none;
+    }
+    .pk-scroll-wrap::-webkit-scrollbar { display: none; }
+
+    .pk-scene {
+      transition: width .5s cubic-bezier(.23,1,.32,1), height .5s cubic-bezier(.23,1,.32,1);
+    }
+
+    /* Zoom modal */
+    .pk-backdrop {
+      position: fixed; inset: 0; background: rgba(3,3,3,.82);
+      backdrop-filter: blur(8px); z-index: 5999;
+      opacity: 0; pointer-events: none; transition: opacity .35s ease;
+    }
+    .pk-backdrop.on { opacity: 1; pointer-events: all; }
+
+    .pk-modal {
+      position: fixed; inset: 0; z-index: 6000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .35s ease;
+    }
+    .pk-modal.active { opacity: 1; pointer-events: all; }
+    .pk-modal-inner {
+      position: relative; width: min(360px, 92vw); max-height: 88vh;
+      overflow-y: auto; border-radius: 18px;
+      background: linear-gradient(155deg, #110608 0%, #080314 35%, #050b12 65%, #0a0608 100%);
+      box-shadow: 0 0 0 1.5px rgba(251,191,36,.6), 0 0 0 3.5px rgba(251,191,36,.12), 0 30px 90px rgba(0,0,0,.95);
+      transform: scale(.82); transition: transform .45s cubic-bezier(.23,1,.32,1);
+    }
+    .pk-modal.active .pk-modal-inner { transform: scale(1); }
+    .pk-modal-close {
+      position: absolute; top: 10px; right: 12px; background: none; border: none;
+      color: rgba(251,191,36,.5); font-family: var(--mono); font-size: .8rem;
+      cursor: pointer; z-index: 10; padding: 4px 8px; border-radius: 4px;
+      transition: color .2s, background .2s;
+    }
+    .pk-modal-close:hover { color: var(--amber); background: rgba(251,191,36,.08); }
+    .pk-modal-body { padding: 14px; }
 
     /* Detail card interior */
     .pk-detail-inner { position: relative; z-index: 5; height: 100%; display: flex; flex-direction: column; padding: 14px; gap: 8px; overflow: hidden; }
@@ -1000,7 +1037,8 @@
   <section id="pk-section" aria-label="Developer Card">
     <div class="wrap pk-section-inner">
       <h2 class="sec-head rv" style="text-align:center;margin-bottom:.75rem">Developer <em>Card</em></h2>
-      <p class="pk-hint">Click any stat for deep analysis · Swipe right to return</p>
+      <p class="pk-hint" id="pk-hint">Tap card to explore · Double-tap to zoom · Swipe to navigate</p>
+      <div class="pk-scroll-wrap" id="pk-scroll-wrap">
       <div class="pk-scene" id="pk-scene">
 
         <!-- MAIN CARD -->
@@ -1173,6 +1211,7 @@
         </div>
 
       </div><!-- end pk-scene -->
+      </div><!-- end pk-scroll-wrap -->
     </div>
   </section>
 
@@ -1974,59 +2013,233 @@
      POKEMON CARD
   ================================================================ */
   function initPokemonCard() {
-    const mainCard = document.getElementById('pkcard-main');
+    const scene      = document.getElementById('pk-scene');
+    const mainCard   = document.getElementById('pkcard-main');
     if (!mainCard) return;
-    const holo = document.getElementById('pk-holo');
-    let activeDetail = null;
-    let touchStartX = 0;
 
+    const detailCards = [...document.querySelectorAll('.pkcard-detail')];
+    const allCards    = [mainCard, ...detailCards]; // index 0 = main, 1-5 = details
+    const N           = allCards.length;
+
+    const backdrop   = document.getElementById('pk-backdrop');
+    const modal      = document.getElementById('pk-modal');
+    const modalBody  = document.getElementById('pk-modal-body');
+    const modalClose = document.getElementById('pk-modal-close');
+    const scrollWrap = document.getElementById('pk-scroll-wrap');
+    const hintEl     = document.getElementById('pk-hint');
+
+    const CARD_W        = 300, CARD_H = 448;
+    const SPREAD_SCALE  = 0.5;
+    const SPREAD_CARD_W = CARD_W * SPREAD_SCALE;   // 150
+    const SPREAD_GAP    = 14;
+    const SPREAD_H      = Math.round(CARD_H * SPREAD_SCALE); // 224
+    const SPREAD_W      = N * SPREAD_CARD_W + (N - 1) * SPREAD_GAP; // 964
+
+    /* ── state ───────────────────────────────────────────── */
+    let appState   = 'idle';  // idle | spread | focused | zoomed
+    let focusedIdx = 0;
+    let touchStartX = 0, touchStartY = 0;
+    let lastTapMs = 0, lastTapEl = null;
+
+    /* ── tilt ────────────────────────────────────────────── */
     function applyTilt(card, e, maxTilt) {
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width;
       const y = (e.clientY - r.top)  / r.height;
-      card.style.transform = `perspective(900px) rotateX(${(y-.5)*-maxTilt}deg) rotateY(${(x-.5)*maxTilt}deg) scale(1.04)`;
+      card.style.transform = `perspective(900px) rotateX(${(y-.5)*-maxTilt*2}deg) rotateY(${(x-.5)*maxTilt*2}deg) scale(1.04)`;
       const h = card.querySelector('.pkcard-holo');
       if (h) h.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%,
         rgba(255,220,80,.28) 0%, rgba(255,0,220,.18) 28%,
         rgba(0,180,255,.15) 58%, rgba(0,255,120,.08) 82%, transparent 100%)`;
     }
-
-    mainCard.addEventListener('mousemove', e => applyTilt(mainCard, e, 22));
-    mainCard.addEventListener('mouseleave', () => { mainCard.style.transform = ''; });
-
-    document.querySelectorAll('.pkcard-detail').forEach(dc => {
-      dc.addEventListener('mousemove', e => applyTilt(dc, e, 16));
-      dc.addEventListener('mouseleave', () => { dc.style.transform = ''; });
-    });
-
-    function showDetail(statKey) {
-      const detail = document.querySelector(`.pkcard-detail[data-stat="${statKey}"]`);
-      if (!detail || activeDetail === statKey) return;
-      mainCard.classList.add('slid-out');
-      setTimeout(() => detail.classList.add('active'), 260);
-      activeDetail = statKey;
+    function removeTilt(card) {
+      card.style.transform = '';
+      const h = card.querySelector('.pkcard-holo');
+      if (h) h.style.background = '';
     }
 
-    function hideDetail() {
-      if (!activeDetail) return;
-      const detail = document.querySelector(`.pkcard-detail[data-stat="${activeDetail}"]`);
-      if (detail) { detail.classList.remove('active'); detail.style.transform = ''; }
-      setTimeout(() => mainCard.classList.remove('slid-out'), 60);
-      activeDetail = null;
+    let tiltListeners = [];
+    function setTiltCard(card) {
+      tiltListeners.forEach(([el, evt, fn]) => el.removeEventListener(evt, fn));
+      tiltListeners = [];
+      if (!card) return;
+      const mm = e => applyTilt(card, e, 11);
+      const ml = ()  => removeTilt(card);
+      card.addEventListener('mousemove', mm);
+      card.addEventListener('mouseleave', ml);
+      tiltListeners = [[card,'mousemove',mm],[card,'mouseleave',ml]];
     }
 
-    document.querySelectorAll('.pk-stat[data-stat]').forEach(s => {
-      s.addEventListener('click', () => showDetail(s.dataset.stat));
-      s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') showDetail(s.dataset.stat); });
+    function setHint(txt) { if (hintEl) hintEl.textContent = txt; }
+
+    /* ── layout helpers ──────────────────────────────────── */
+    function hideAll() {
+      allCards.forEach(c => {
+        c.style.opacity = '0';
+        c.style.pointerEvents = 'none';
+        c.style.cursor = 'default';
+      });
+    }
+
+    function posCard(c, tx, ty, sc, opacity, zIndex, pointer) {
+      c.style.transform      = `translate(${tx}px,${ty}px) scale(${sc})`;
+      c.style.opacity        = String(opacity);
+      c.style.pointerEvents  = pointer ? 'all' : 'none';
+      c.style.cursor         = pointer ? 'pointer' : 'default';
+      c.style.zIndex         = String(zIndex);
+    }
+
+    /* ── state transitions ───────────────────────────────── */
+    function goIdle() {
+      appState = 'idle';
+      scene.style.width  = CARD_W + 'px';
+      scene.style.height = CARD_H + 'px';
+      scene.style.perspective = '1200px';
+      allCards.forEach((c, i) => {
+        c.style.transition = 'transform .5s cubic-bezier(.23,1,.32,1), opacity .4s ease';
+        if (i === 0) posCard(c, 0, 0, 1, 1, 2, true);
+        else         posCard(c, 0, 0, 1, 0, 0, false); // invisible, no overflow
+      });
+      setTiltCard(mainCard);
+      backdrop.classList.remove('on');
+      setHint('Tap card to explore · Double-tap to zoom · Swipe to navigate');
+      focusedIdx = 0;
+    }
+
+    function goSpread() {
+      appState = 'spread';
+      scene.style.width       = SPREAD_W + 'px';
+      scene.style.height      = SPREAD_H + 'px';
+      scene.style.perspective = 'none';
+      allCards.forEach((c, i) => {
+        const tx = i * (SPREAD_CARD_W + SPREAD_GAP);
+        c.style.transition = 'transform .5s cubic-bezier(.23,1,.32,1), opacity .4s ease';
+        posCard(c, tx, 0, SPREAD_SCALE, 1, 1, true);
+      });
+      setTiltCard(null);
+      setHint('Tap a card to focus it · Tap backdrop to close');
+      setTimeout(() => scrollWrap && scrollWrap.scrollTo({ left: 0, behavior: 'smooth' }), 60);
+    }
+
+    function goFocused(idx) {
+      appState   = 'focused';
+      focusedIdx = idx;
+      scene.style.width       = CARD_W + 'px';
+      scene.style.height      = CARD_H + 'px';
+      scene.style.perspective = '1200px';
+      allCards.forEach((c, i) => {
+        c.style.transition = 'transform .5s cubic-bezier(.23,1,.32,1), opacity .4s ease';
+        if (i === idx) posCard(c, 0, 0, 1, 1, 2, true);
+        else           posCard(c, 0, 0, 0.95, 0, 0, false); // invisible, no overflow
+      });
+      setTiltCard(allCards[idx]);
+      setHint('Double-tap to zoom · Swipe left/right to navigate · Tap backdrop to go back');
+    }
+
+    function goZoomed(idx) {
+      appState = 'zoomed';
+      const card = allCards[idx];
+      const src  = card.querySelector('.pk-detail-inner') || card.querySelector('.pk-inner');
+      if (!src) return;
+      modalBody.innerHTML = src.innerHTML;
+      modalBody.querySelectorAll('.pk-back').forEach(b => b.remove());
+      // re-enable scrolling inside modal's pk-d-scroll
+      modalBody.querySelectorAll('.pk-d-scroll').forEach(el => { el.style.overflowY = 'auto'; });
+      modal.classList.add('active');
+      backdrop.classList.add('on');
+    }
+
+    function closeZoom() {
+      modal.classList.remove('active');
+      backdrop.classList.remove('on');
+      setTimeout(() => { modalBody.innerHTML = ''; }, 400);
+      appState = 'focused';
+    }
+
+    /* ── tap / double-tap detection ──────────────────────── */
+    function handleTap(card, idx) {
+      const now    = Date.now();
+      const isDouble = (now - lastTapMs < 340) && lastTapEl === card;
+      lastTapMs  = now;
+      lastTapEl  = card;
+
+      if (isDouble) {
+        // double-tap zooms any card in spread or focused
+        if (appState === 'focused' || appState === 'spread') goZoomed(idx);
+        return;
+      }
+
+      if (appState === 'idle')    { goSpread();      return; }
+      if (appState === 'spread')  { goFocused(idx);  return; }
+      // single tap on focused card — do nothing (use swipe or double-tap)
+    }
+
+    allCards.forEach((card, idx) => {
+      card.addEventListener('click', e => {
+        e.stopPropagation();
+        handleTap(card, idx);
+      });
     });
-    document.querySelectorAll('.pk-back').forEach(btn => btn.addEventListener('click', hideDetail));
 
-    /* Touch swipe right = back */
-    const scene = document.getElementById('pk-scene');
-    scene.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    scene.addEventListener('touchend',   e => { if (activeDetail && e.changedTouches[0].clientX - touchStartX > 55) hideDetail(); }, { passive: true });
+    /* Stat clicks on main card: if idle → spread, if focused → zoom */
+    mainCard.querySelectorAll('.pk-stat[data-stat]').forEach(s => {
+      s.addEventListener('click', e => {
+        e.stopPropagation();
+        if (appState === 'idle')    goSpread();
+        else if (appState === 'focused') goZoomed(0);
+      });
+    });
 
-    /* Animate bars + HP counter on reveal */
+    /* Back buttons in detail cards → go back to spread */
+    allCards.forEach(c => {
+      c.querySelectorAll('.pk-back').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (appState === 'focused') goSpread();
+        });
+      });
+    });
+
+    /* Backdrop click */
+    backdrop.addEventListener('click', () => {
+      if (appState === 'zoomed')  closeZoom();
+      else if (appState === 'focused') goSpread();
+      else if (appState === 'spread')  goIdle();
+    });
+
+    /* Click on scene background (not a card) while spread → idle */
+    scene.addEventListener('click', e => {
+      if (e.target === scene && appState === 'spread') goIdle();
+    });
+
+    /* Modal close */
+    modalClose.addEventListener('click', closeZoom);
+
+    /* Keyboard */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (appState === 'zoomed')   closeZoom();
+        else if (appState === 'focused') goSpread();
+        else if (appState === 'spread')  goIdle();
+      }
+    });
+
+    /* Touch swipe for navigation */
+    scene.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    scene.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) < 48 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+      if (appState !== 'focused') return;
+      if (dx < 0) goFocused((focusedIdx + 1) % N);          // swipe left → next
+      else         goFocused((focusedIdx - 1 + N) % N);     // swipe right → prev
+    }, { passive: true });
+
+    /* ── bars + HP counter on scroll-reveal ─────────────── */
     observe(mainCard, () => {
       const hp = document.getElementById('pk-hp-anim');
       if (hp) {
@@ -2040,6 +2253,7 @@
       setTimeout(() => document.querySelectorAll('.pk-bar-fill').forEach(b => { b.style.width = b.dataset.pct; }), 450);
     }, 0.3);
 
+    goIdle();
     initPkArt();
   }
 
@@ -2113,5 +2327,14 @@
 
 })();
 </script>
+
+<!-- Card zoom backdrop + modal -->
+<div class="pk-backdrop" id="pk-backdrop" aria-hidden="true"></div>
+<div class="pk-modal" id="pk-modal" role="dialog" aria-modal="true" aria-label="Card detail expanded">
+  <div class="pk-modal-inner">
+    <button class="pk-modal-close" id="pk-modal-close" aria-label="Close">✕ close</button>
+    <div class="pk-modal-body" id="pk-modal-body"></div>
+  </div>
+</div>
 </body>
 </html>
