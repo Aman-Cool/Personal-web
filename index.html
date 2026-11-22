@@ -908,6 +908,10 @@
             <div class="id-val">LFX Mentee · Kuadrant (CNCF) · LiFT Scholar</div>
           </div>
           <div class="id-row">
+            <div class="id-lbl">Member</div>
+            <div class="id-val">Volcano (CNCF) · volcano-sh org</div>
+          </div>
+          <div class="id-row">
             <div class="id-lbl">Focus</div>
             <div class="id-val">Systems Architecture · Real-Time Data · Security-First Design</div>
           </div>
@@ -922,7 +926,7 @@
           <p>I build systems that hold under pressure. My work lives at the intersection of performance engineering and security architecture; where every design decision is deliberate and every abstraction earns its place.</p>
           <p>From Go microservices handling concurrent event streams to React interfaces that surface complex data cleanly, I operate across the full stack with the same standard: robust, observable, and built to scale without surprise.</p>
           <p>I'm an active open source contributor ; working across production-grade infrastructure projects spanning Kubernetes operators, distributed systems, security tooling, and scientific computing platforms. I contribute where the code actually runs at scale.</p>
-          <p>I was selected as an <strong>LFX Mentee</strong> for Kuadrant, where I designed and shipped Agent2Agent (A2A) protocol support for the MCP Gateway, and as a Linux Foundation <strong>LiFT Scholar</strong> for Kubernetes (LFS258 + CKA).</p>
+          <p>I was selected as an <strong>LFX Mentee</strong> for Kuadrant, where I designed and shipped Agent2Agent (A2A) protocol support for the MCP Gateway, and as a Linux Foundation <strong>LiFT Scholar</strong> for Kubernetes (LFS258 + CKA). I'm also a <strong>member of the Volcano</strong> organisation, the CNCF batch scheduler for Kubernetes.</p>
           <p>Security is not a feature I add after the fact. It's a constraint I design around from the first line ; production-grade authentication, cryptographic integrity, and failure-tolerant pipelines are the baseline, not the finish line.</p>
         </div>
       </div>
@@ -993,6 +997,13 @@
               <span class="ms-code">CKA</span>
               <div><div class="ms-cert-t">Certified Kubernetes Administrator</div><div class="ms-cert-b">CNCF certification for installing, configuring and operating production Kubernetes clusters.</div></div>
             </div>
+          </article>
+
+          <article class="ms-card rv" aria-label="Volcano organisation membership">
+            <div class="ms-top"><span class="ms-badge">CNCF · Org Member</span></div>
+            <h3 class="ms-title">Volcano Member</h3>
+            <div class="ms-sub">volcano-sh · 11 Merged PRs</div>
+            <p class="ms-desc" style="margin-bottom:0">Member of the <a href="https://github.com/volcano-sh/volcano" target="_blank" rel="noopener noreferrer">volcano-sh ↗</a> organisation. My fixes are in the scheduler core: preemption and reclaim eviction rollback, double-counted inqueue resources in the capacity and proportion plugins, a nil panic in hierarchical queues, and queue metrics.</p>
           </article>
 
           <article class="ms-card rv" aria-label="Kuadrant contributions">
@@ -1110,7 +1121,7 @@
       <div class="oss-grid" id="oss-grid">
         <a href="https://github.com/volcano-sh/volcano" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Volcano on GitHub">
           <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
-          volcano-sh
+          volcano-sh · member
         </a>
         <a href="https://github.com/eclipse-sw360/sw360" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="SW360 on GitHub">
           <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
@@ -1241,7 +1252,7 @@
             </div>
             <div class="pk-d-scroll">
               <div class="pk-d-row"><div class="pk-d-row-t">eclipse-sw360 ; 14 PRs</div><div class="pk-d-row-b">Enterprise Java compliance tooling for global software orgs. Thrift RPC layer, REST API, attachment lifecycle ; the full stack of a complex codebase.</div></div>
-              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh ; 11 PRs</div><div class="pk-d-row-b">CNCF batch scheduler for Kubernetes ML workloads. Scheduler-level correctness fixes ; the kind that can silently starve jobs at scale.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh ; 11 PRs · Org Member</div><div class="pk-d-row-b">CNCF batch scheduler for Kubernetes ML workloads. Scheduler-level correctness fixes ; the kind that can silently starve jobs at scale.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">Kuadrant/mcp-gateway ; 17 PRs · LFX Mentee</div><div class="pk-d-row-b">Shipped A2A protocol support as an LFX mentee: design doc, A2A test server, router passthrough behind --enable-a2a, and e2e coverage. Also fixed session cache races, Redis leaks and graceful shutdown.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">hyperledger-labs/fabric-token-sdk ; 3 PRs</div><div class="pk-d-row-b">Blockchain asset tokenization. Fixed 5 silent asset-safety bugs across selector, storage, and HTLC subsystems in a single PR.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">+ 17 more organizations</div><div class="pk-d-row-b">cilium · karmada · kro · fluxcd · rattler · AIDRIN · openyurt · kube-burner · kyverno · HSF/phoenix · edulinq · autograder · flux-operator · compliance-trestle · flix2</div></div>
@@ -1329,7 +1340,7 @@
             </div>
             <div class="pk-d-scroll">
               <div class="pk-d-row"><div class="pk-d-row-t">cilium/cilium #43902 ; Backported: v1.18 + v1.19</div><div class="pk-d-row-b">eBPF-based networking for Kubernetes. Fix was serious enough for maintainers to ship to two stable release branches ; meaning it landed in production clusters worldwide.</div></div>
-              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano ; 7 PRs, priority/high</div><div class="pk-d-row-b">CNCF batch scheduler running ML training jobs at scale. Fixes include nil panic in hierarchical queue mode and double-counting inqueue resources in the scheduler core.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano ; 11 PRs, org member</div><div class="pk-d-row-b">CNCF batch scheduler running ML training jobs at scale. Fixes include nil panic in hierarchical queue mode and double-counting inqueue resources in the scheduler core.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">karmada-io/karmada ; Divide-by-zero in spread constraint</div><div class="pk-d-row-b">Multi-cluster federation control plane. Divide-by-zero in the spread constraint calculation ; a crash in production multi-cluster orchestration, triggered at runtime.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">fluxcd/flux2 ; 2 PRs</div><div class="pk-d-row-b">GitOps delivery for Kubernetes. Fixed exit code 0 on resume failure and success log emitted after reconciliation error ; both invisible failures in automated pipelines.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">kubernetes-sigs/kro ; 2 PRs</div><div class="pk-d-row-b">Kubernetes Resource Orchestrator. Fixed flaky integration test and CRD deletion handling so RGDs don't get stuck in Active state permanently.</div></div>
