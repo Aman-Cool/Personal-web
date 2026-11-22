@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aman Kumar ; Full-Stack Engineer</title>
-  <meta name="description" content="Full-Stack Engineer. Systems Architecture · Real-Time Data · Security-First Design. Bangalore, India.">
+  <meta name="description" content="Full-Stack Engineer · LFX Mentee (Kuadrant) · LiFT Scholar. Systems Architecture · Real-Time Data · Security-First Design. Bangalore, India.">
   <meta property="og:title" content="Aman Kumar ; Full-Stack Engineer">
   <meta property="og:description" content="Full-Stack Engineer. Systems Architecture · Real-Time Data · Security-First Design.">
   <meta property="og:type" content="website">
@@ -463,6 +463,65 @@
       color: #64748b;
     }
 
+    /* ---- MILESTONES ---- */
+    #milestones { padding: 7rem 0; background: var(--black-2); }
+    .ms-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 1.5rem; }
+    .ms-card {
+      background: var(--black);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: .85rem;
+      padding: 1.9rem;
+      position: relative;
+      clip-path: polygon(0 14px, 14px 0, 100% 0, 100% 100%, 0 100%);
+      transition: opacity .8s var(--ease), transform .8s var(--ease), border-color .3s, box-shadow .3s;
+    }
+    .ms-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      height: 2px; width: 100%; background: var(--amber);
+    }
+    .ms-card:hover { border-color: rgba(251,191,36,.35); box-shadow: 0 20px 60px rgba(251,191,36,.06); }
+    .ms-top { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-bottom: 1rem; }
+    .ms-badge {
+      font-family: var(--mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--black); background: var(--amber); padding: .22rem .55rem; border-radius: .25rem; font-weight: 600;
+    }
+    .ms-status {
+      font-family: var(--mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .12em;
+      color: #34d399; border: 1px solid rgba(52,211,153,.35); padding: .2rem .55rem; border-radius: .25rem;
+    }
+    .ms-title { font-size: 1.3rem; font-weight: 800; color: #f8fafc; line-height: 1.3; margin-bottom: .35rem; }
+    .ms-sub {
+      font-family: var(--mono); font-size: .68rem; color: var(--amber); opacity: .75;
+      text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1rem;
+    }
+    .ms-desc { font-size: .88rem; line-height: 1.75; color: #94a3b8; margin-bottom: 1.3rem; }
+    .ms-list { list-style: none; margin-bottom: 1.4rem; display: grid; gap: .65rem; }
+    .ms-list li {
+      font-size: .82rem; line-height: 1.6; color: #64748b;
+      padding-left: 1.1rem; position: relative;
+    }
+    .ms-list li::before { content: '▸'; position: absolute; left: 0; color: var(--amber); opacity: .7; }
+    .ms-list b { color: #e2e8f0; font-weight: 600; }
+    .ms-list a, .ms-desc a { color: var(--amber); text-decoration: none; font-family: var(--mono); font-size: .78em; }
+    .ms-list a:hover, .ms-desc a:hover { text-decoration: underline; }
+    .ms-side { display: grid; gap: 1.5rem; align-content: start; }
+    .ms-cert {
+      display: flex; gap: .9rem; align-items: flex-start;
+      padding: .9rem 1rem; margin-bottom: .7rem;
+      background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.07); border-radius: .5rem;
+    }
+    .ms-cert:last-child { margin-bottom: 0; }
+    .ms-code {
+      font-family: var(--mono); font-size: .7rem; font-weight: 600; color: var(--amber);
+      border: 1px solid rgba(251,191,36,.35); border-radius: .3rem; padding: .3rem .45rem;
+      min-width: 3.6rem; text-align: center; flex-shrink: 0;
+    }
+    .ms-cert-t { font-size: .88rem; font-weight: 600; color: #e2e8f0; margin-bottom: .15rem; }
+    .ms-cert-b { font-size: .76rem; line-height: 1.55; color: #64748b; }
+    .ms-stat { display: flex; gap: 1.6rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .ms-stat div { font-family: var(--mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .12em; color: #64748b; }
+    .ms-stat strong { display: block; font-family: var(--sans); font-size: 1.6rem; font-weight: 800; color: var(--amber); letter-spacing: 0; text-transform: none; }
+
     /* ---- METRICS ---- */
     #metrics { padding: 6rem 0; background: var(--navy); }
 
@@ -775,7 +834,8 @@
     @media (max-width: 768px) {
       body { cursor: auto; }
       #cur-dot, #cur-ring, .cur-ghost { display: none; }
-      .about-grid, .proj-grid, .contact-grid { grid-template-columns: 1fr; }
+      .about-grid, .proj-grid, .contact-grid, .ms-grid { grid-template-columns: 1fr; }
+      .ms-card { padding: 1.4rem; }
       .metrics-row { grid-template-columns: repeat(2, 1fr); }
       .id-card { transform: none; opacity: 1; }
       .id-card.in { transform: none; }
@@ -844,6 +904,14 @@
             <div class="id-val">Full-Stack Engineer · Open Source Contributor</div>
           </div>
           <div class="id-row">
+            <div class="id-lbl">Programs</div>
+            <div class="id-val">LFX Mentee · Kuadrant (CNCF) · LiFT Scholar</div>
+          </div>
+          <div class="id-row">
+            <div class="id-lbl">Member</div>
+            <div class="id-val">Volcano (CNCF) · volcano-sh org</div>
+          </div>
+          <div class="id-row">
             <div class="id-lbl">Focus</div>
             <div class="id-val">Systems Architecture · Real-Time Data · Security-First Design</div>
           </div>
@@ -858,6 +926,7 @@
           <p>I build systems that hold under pressure. My work lives at the intersection of performance engineering and security architecture; where every design decision is deliberate and every abstraction earns its place.</p>
           <p>From Go microservices handling concurrent event streams to React interfaces that surface complex data cleanly, I operate across the full stack with the same standard: robust, observable, and built to scale without surprise.</p>
           <p>I'm an active open source contributor ; working across production-grade infrastructure projects spanning Kubernetes operators, distributed systems, security tooling, and scientific computing platforms. I contribute where the code actually runs at scale.</p>
+          <p>I was selected as an <strong>LFX Mentee</strong> for Kuadrant, where I designed and shipped Agent2Agent (A2A) protocol support for the MCP Gateway, and as a Linux Foundation <strong>LiFT Scholar</strong> for Kubernetes (LFS258 + CKA). I'm also a <strong>member of the Volcano</strong> organisation, the CNCF batch scheduler for Kubernetes.</p>
           <p>Security is not a feature I add after the fact. It's a constraint I design around from the first line ; production-grade authentication, cryptographic integrity, and failure-tolerant pipelines are the baseline, not the finish line.</p>
         </div>
       </div>
@@ -870,11 +939,80 @@
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Node.js</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>PostgreSQL</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Docker</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Kubernetes</div>
+          <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Envoy</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Tailwind CSS</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Next.js</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>Redis</div>
           <div class="pill" tabindex="0"><span class="pill-dot" aria-hidden="true"></span>AWS / Vercel</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MILESTONES ===== -->
+  <section id="milestones" aria-label="Milestones">
+    <div class="wrap">
+      <h2 class="sec-head rv">The <em>Milestones</em></h2>
+      <div class="ms-grid">
+
+        <article class="ms-card rv" aria-label="LFX Mentorship with Kuadrant">
+          <div class="ms-top">
+            <span class="ms-badge">LFX Mentorship · CNCF</span>
+            <span class="ms-status">✓ Completed</span>
+          </div>
+          <h3 class="ms-title">A2A Protocol Support for Kuadrant's MCP Gateway</h3>
+          <div class="ms-sub">Kuadrant · 2026 Term 2 · <a href="https://github.com/Kuadrant/mcp-gateway/issues/766" target="_blank" rel="noopener noreferrer" style="color:inherit">Issue #766</a></div>
+          <p class="ms-desc">Extended Kuadrant's Envoy-based MCP Gateway beyond MCP to the Agent2Agent (A2A) protocol, so inter-agent traffic (discovery, long-running tasks, streaming) runs inside the same AuthPolicy, RateLimitPolicy and observability plane as MCP tool calls. I worked with the maintainers from gap analysis through design, implementation and e2e tests.</p>
+          <div class="ms-stat">
+            <div><strong>17</strong>Merged PRs</div>
+            <div><strong>1.7k</strong>Line Design Doc</div>
+            <div><strong>A2A v1.0</strong>Spec Target</div>
+          </div>
+          <ul class="ms-list">
+            <li><b>Design document:</b> A2A vs MCP gap analysis, routing through ext_proc, federated agent cards in the broker, session handling and CRD design. <a href="https://github.com/Kuadrant/mcp-gateway/pull/1114" target="_blank" rel="noopener noreferrer">#1114 ↗</a></li>
+            <li><b>A2A test server:</b> an e2e fixture covering the task lifecycle, streaming and agent cards, then hardened for request lifetime and task retention. <a href="https://github.com/Kuadrant/mcp-gateway/pull/1200" target="_blank" rel="noopener noreferrer">#1200 ↗</a> <a href="https://github.com/Kuadrant/mcp-gateway/pull/1366" target="_blank" rel="noopener noreferrer">#1366 ↗</a></li>
+            <li><b>Router A2A passthrough:</b> behind the experimental <code>--enable-a2a</code> flag. It strips spoofed headers, parses only the JSON-RPC envelope, sets <code>x-a2a-method</code>/<code>x-a2a-agent</code> for auth and telemetry, and rejects unparseable requests. <a href="https://github.com/Kuadrant/mcp-gateway/pull/1371" target="_blank" rel="noopener noreferrer">#1371 ↗</a> <a href="https://github.com/Kuadrant/mcp-gateway/issues/1333" target="_blank" rel="noopener noreferrer">#1333 ↗</a></li>
+            <li><b>E2E coverage:</b> agent discovery and task execution through the gateway. <a href="https://github.com/Kuadrant/mcp-gateway/pull/1418" target="_blank" rel="noopener noreferrer">#1418 ↗</a></li>
+            <li><b>Workshop fork:</b> the full design proven end to end (federated card broker, task routing, CRD), then upstreamed in phases. <a href="https://github.com/Aman-Cool/A2A-Agent2Agent-protocol" target="_blank" rel="noopener noreferrer">A2A fork ↗</a></li>
+          </ul>
+          <div class="stack-row">
+            <span class="stag">Go</span><span class="stag">Envoy ext_proc</span><span class="stag">Gateway API</span><span class="stag">Kubernetes CRDs</span><span class="stag">A2A</span><span class="stag">MCP</span><span class="stag">OpenTelemetry</span>
+          </div>
+        </article>
+
+        <div class="ms-side">
+          <article class="ms-card rv" aria-label="LiFT Scholarship">
+            <div class="ms-top">
+              <span class="ms-badge">Linux Foundation</span>
+            </div>
+            <h3 class="ms-title">LiFT Scholar</h3>
+            <div class="ms-sub">Linux Foundation Training Scholarship</div>
+            <p class="ms-desc">Selected for the Linux Foundation's LiFT Scholarship, which funds training and certification for open source contributors.</p>
+            <div class="ms-cert">
+              <span class="ms-code">LFS258</span>
+              <div><div class="ms-cert-t">Kubernetes Fundamentals</div><div class="ms-cert-b">Cluster architecture, workloads, networking, storage and security.</div></div>
+            </div>
+            <div class="ms-cert">
+              <span class="ms-code">CKA</span>
+              <div><div class="ms-cert-t">Certified Kubernetes Administrator</div><div class="ms-cert-b">CNCF certification for installing, configuring and operating production Kubernetes clusters.</div></div>
+            </div>
+          </article>
+
+          <article class="ms-card rv" aria-label="Volcano organisation membership">
+            <div class="ms-top"><span class="ms-badge">CNCF · Org Member</span></div>
+            <h3 class="ms-title">Volcano Member</h3>
+            <div class="ms-sub">volcano-sh · 11 Merged PRs</div>
+            <p class="ms-desc" style="margin-bottom:0">Member of the <a href="https://github.com/volcano-sh/volcano" target="_blank" rel="noopener noreferrer">volcano-sh ↗</a> organisation. My fixes are in the scheduler core: preemption and reclaim eviction rollback, double-counted inqueue resources in the capacity and proportion plugins, a nil panic in hierarchical queues, and queue metrics.</p>
+          </article>
+
+          <article class="ms-card rv" aria-label="Kuadrant contributions">
+            <div class="ms-top"><span class="ms-badge">Before the Mentorship</span></div>
+            <h3 class="ms-title">Kuadrant Contributor</h3>
+            <p class="ms-desc" style="margin-bottom:0">Before the mentorship I was already fixing concurrency bugs in mcp-gateway, including session cache map races, duplicate backend sessions, Redis TTL and context leaks, and SIGTERM graceful shutdown. I have also contributed to Authorino.</p>
+          </article>
+        </div>
+
       </div>
     </div>
   </section>
@@ -983,7 +1121,7 @@
       <div class="oss-grid" id="oss-grid">
         <a href="https://github.com/volcano-sh/volcano" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="Volcano on GitHub">
           <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
-          volcano-sh
+          volcano-sh · member
         </a>
         <a href="https://github.com/eclipse-sw360/sw360" target="_blank" rel="noopener noreferrer" class="org-tag" aria-label="SW360 on GitHub">
           <svg viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
@@ -1071,7 +1209,7 @@
               <div class="pk-stat" data-stat="merged" role="listitem button" tabindex="0" aria-label="Merged PRs ; click for detail">
                 <span class="pk-stat-nm">Merged PRs</span>
                 <div class="pk-bar"><div class="pk-bar-fill" data-pct="96%" style="background:linear-gradient(90deg,rgba(251,191,36,.65),#fbbf24)"></div></div>
-                <span class="pk-stat-v">58</span>
+                <span class="pk-stat-v">69</span>
               </div>
               <div class="pk-stat" data-stat="reach" role="listitem button" tabindex="0" aria-label="Reach ; click for detail">
                 <span class="pk-stat-nm">Reach</span>
@@ -1096,7 +1234,7 @@
             </div>
             <div class="pk-rarity">
               <span class="pk-stars">★★★</span>
-              <span class="pk-edition">GITHUB · 2025 EDITION · 001/001</span>
+              <span class="pk-edition">GITHUB · 2026 EDITION · 001/001</span>
             </div>
           </div>
         </div>
@@ -1109,17 +1247,17 @@
             <button class="pk-back" aria-label="Return to main card">← Back</button>
             <div>
               <div class="pk-d-label">Stat Analysis · Merged PRs</div>
-              <div class="pk-d-title">58 Merged Pull Requests</div>
-              <div class="pk-d-big">21 Repos</div>
+              <div class="pk-d-title">69 Merged Pull Requests</div>
+              <div class="pk-d-big">20+ Repos</div>
             </div>
             <div class="pk-d-scroll">
               <div class="pk-d-row"><div class="pk-d-row-t">eclipse-sw360 ; 14 PRs</div><div class="pk-d-row-b">Enterprise Java compliance tooling for global software orgs. Thrift RPC layer, REST API, attachment lifecycle ; the full stack of a complex codebase.</div></div>
-              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh ; 8 PRs</div><div class="pk-d-row-b">CNCF batch scheduler for Kubernetes ML workloads. Scheduler-level correctness fixes ; the kind that can silently starve jobs at scale.</div></div>
-              <div class="pk-d-row"><div class="pk-d-row-t">Kuadrant/mcp-gateway ; 3 PRs</div><div class="pk-d-row-b">Three-PR sequence fixing progressively deeper layers of the same session cache bug: map race → copy-on-write → Redis context cancellation.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh ; 11 PRs · Org Member</div><div class="pk-d-row-b">CNCF batch scheduler for Kubernetes ML workloads. Scheduler-level correctness fixes ; the kind that can silently starve jobs at scale.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">Kuadrant/mcp-gateway ; 17 PRs · LFX Mentee</div><div class="pk-d-row-b">Shipped A2A protocol support as an LFX mentee: design doc, A2A test server, router passthrough behind --enable-a2a, and e2e coverage. Also fixed session cache races, Redis leaks and graceful shutdown.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">hyperledger-labs/fabric-token-sdk ; 3 PRs</div><div class="pk-d-row-b">Blockchain asset tokenization. Fixed 5 silent asset-safety bugs across selector, storage, and HTLC subsystems in a single PR.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">+ 17 more organizations</div><div class="pk-d-row-b">cilium · karmada · kro · fluxcd · rattler · AIDRIN · openyurt · kube-burner · kyverno · HSF/phoenix · edulinq · autograder · flux-operator · compliance-trestle · flix2</div></div>
             </div>
-            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>58 PRs across 21 distinct production systems means rapid, deep codebase onboarding across Go, Java, Rust, Python, and TypeScript ; every single time, cold, no handholding.</p></div>
+            <div class="pk-d-elite"><div class="pk-d-elite-lbl">Why Elite</div><p>69 PRs across 20+ distinct production systems means rapid, deep codebase onboarding across Go, Java, Rust, Python, and TypeScript ; every single time, cold, no handholding.</p></div>
           </div>
         </div>
 
@@ -1202,7 +1340,7 @@
             </div>
             <div class="pk-d-scroll">
               <div class="pk-d-row"><div class="pk-d-row-t">cilium/cilium #43902 ; Backported: v1.18 + v1.19</div><div class="pk-d-row-b">eBPF-based networking for Kubernetes. Fix was serious enough for maintainers to ship to two stable release branches ; meaning it landed in production clusters worldwide.</div></div>
-              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano ; 7 PRs, priority/high</div><div class="pk-d-row-b">CNCF batch scheduler running ML training jobs at scale. Fixes include nil panic in hierarchical queue mode and double-counting inqueue resources in the scheduler core.</div></div>
+              <div class="pk-d-row"><div class="pk-d-row-t">volcano-sh/volcano ; 11 PRs, org member</div><div class="pk-d-row-b">CNCF batch scheduler running ML training jobs at scale. Fixes include nil panic in hierarchical queue mode and double-counting inqueue resources in the scheduler core.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">karmada-io/karmada ; Divide-by-zero in spread constraint</div><div class="pk-d-row-b">Multi-cluster federation control plane. Divide-by-zero in the spread constraint calculation ; a crash in production multi-cluster orchestration, triggered at runtime.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">fluxcd/flux2 ; 2 PRs</div><div class="pk-d-row-b">GitOps delivery for Kubernetes. Fixed exit code 0 on resume failure and success log emitted after reconciliation error ; both invisible failures in automated pipelines.</div></div>
               <div class="pk-d-row"><div class="pk-d-row-t">kubernetes-sigs/kro ; 2 PRs</div><div class="pk-d-row-b">Kubernetes Resource Orchestrator. Fixed flaky integration test and CRD deletion handling so RGDs don't get stuck in Active state permanently.</div></div>
@@ -1300,7 +1438,7 @@
 
   <!-- ===== FOOTER ===== -->
   <footer>
-    <p class="ft-txt">© 2025 Aman Kumar. Precision in the dark. Clarity in the light.</p>
+    <p class="ft-txt">© 2026 Aman Kumar. Precision in the dark. Clarity in the light.</p>
     <div class="ft-mark" aria-hidden="true">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
         <polygon points="14,2 26,26 2,26" stroke="#fbbf24" stroke-width="1.5" fill="none"/>
@@ -2247,7 +2385,7 @@
         const t0 = performance.now();
         (function tick(now) {
           const p = Math.min((now - t0) / 1600, 1);
-          hp.textContent = Math.round((1 - Math.pow(1-p, 3)) * 58);
+          hp.textContent = Math.round((1 - Math.pow(1-p, 3)) * 69);
           if (p < 1) requestAnimationFrame(tick);
         })(t0);
       }
